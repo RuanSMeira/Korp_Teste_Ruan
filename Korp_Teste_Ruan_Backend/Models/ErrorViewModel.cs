@@ -1,4 +1,4 @@
-namespace Korp_Teste_Ruan.Web.Models;
+namespace Korp_Teste_Ruan_Backend.Models;
 
 public class ErrorViewModel
 {

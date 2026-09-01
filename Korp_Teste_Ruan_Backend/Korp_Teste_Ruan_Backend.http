@@ -1,0 +1,6 @@
+@Korp_Teste_Ruan_Backend_HostAddress = http://localhost:5206
+
+GET {{Korp_Teste_Ruan_Backend_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
