@@ -3,6 +3,7 @@ namespace Korp_Teste_Ruan_Backend.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Korp_Teste_Ruan_Backend.Models;
 using Korp_Teste_Ruan_Backend.Services;
+using Korp_Teste_Ruan_Backend.DTOs.Request;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -13,6 +14,30 @@ public class UsuarioController : ControllerBase
     public UsuarioController(UsuarioService service)
     {
         _service = service;
+    }
+
+    // POST: api/usuario/login
+    [HttpPost("login")]
+    public async Task<IActionResult> Login([FromBody] LoginRequest request)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        var usuario = await _service.LoginAsync(request);
+
+        if (usuario is null)
+            return Unauthorized(new { erro = "E-mail ou senha inválidos." });
+
+        return Ok(new
+        {
+            usuarioId = usuario.UsuarioId,
+            empresaId = usuario.EmpresaId,
+            nomeUsuario = usuario.NomeUsuario,
+            email = usuario.Email,
+            nomeFantasia = usuario.Empresa?.NomeFantasia,
+            cnpj = usuario.Empresa?.Cnpj,
+            perfil = "usuario"
+        });
     }
 
     // GET: api/usuario
@@ -45,13 +70,20 @@ public class UsuarioController : ControllerBase
 
     // POST: api/usuario
     [HttpPost]
-    public async Task<ActionResult<Usuario>> Create([FromBody] Usuario usuario)
+    public async Task<ActionResult<Usuario>> Create([FromBody] CriarUsuarioRequest request)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
         try
         {
+            var usuario = new Usuario
+            {
+                EmpresaId = request.EmpresaId,
+                NomeUsuario = request.NomeUsuario.Trim(),
+                Email = request.Email.Trim().ToLowerInvariant(),
+                SenhaHash = request.Senha
+            };
             var criado = await _service.CreateAsync(usuario);
             return CreatedAtAction(nameof(GetById), new { id = criado.UsuarioId }, criado);
         }

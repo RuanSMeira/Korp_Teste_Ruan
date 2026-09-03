@@ -7,6 +7,7 @@ namespace Korp_Teste_Ruan_Backend.Services.Interfaces;
 public interface INotaFiscalService
 {
     Task<NotaFiscalResponse> CreateComItensAsync(CriarNotaFiscalRequest request);
+    Task<IEnumerable<NotaFiscalResponse>> GetAllByEmpresaAsync(int empresaId);
     Task<NotaFiscal?> GetByIdAsync(int id);
     Task<NotaFiscalResponse> EmitirNotaAsync(int notaFiscalId); 
 }

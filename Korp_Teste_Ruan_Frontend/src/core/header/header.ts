@@ -1,4 +1,5 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
+import { SessaoService } from '../../app/core/api/sessao.service';
 
 @Component({
   selector: 'app-header',
@@ -6,8 +7,15 @@ import { Component, Input } from '@angular/core';
   templateUrl: './header.html',
 })
 export class HeaderComponent {
+  private readonly sessao = inject(SessaoService);
   @Input({ required: true }) title!: string;
   @Input({ required: true }) subtitle!: string;
-  @Input() userName = 'Ana Silva';
-  @Input() avatarUrl = 'https://placehold.co/32x32';
+
+  get userName(): string {
+    return this.sessao.obterNomeExibicao();
+  }
+
+  get avatarUrl(): string {
+    return '';
+  }
 }

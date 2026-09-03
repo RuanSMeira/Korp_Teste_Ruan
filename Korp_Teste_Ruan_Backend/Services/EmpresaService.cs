@@ -26,9 +26,18 @@ public class EmpresaService
         return await _repository.GetByIdAsync(id);
     }
 
+    public async Task<Empresa?> LoginAsync(string cnpj, string senha)
+    {
+        var empresa = await _repository.GetByCnpjAsync(cnpj);
+        return empresa is not null && empresa.SenhaMaster == senha ? empresa : null;
+    }
+
     public async Task<Empresa> CreateAsync(Empresa empresa)
     {
         ValidarCnpj(empresa.Cnpj);
+
+        if (string.IsNullOrWhiteSpace(empresa.SenhaMaster) || empresa.SenhaMaster.Length < 8)
+            throw new ArgumentException("A senha master deve ter no mínimo 8 caracteres.");
 
         var existente = await _repository.GetByCnpjAsync(empresa.Cnpj);
         if (existente is not null)

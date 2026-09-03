@@ -32,6 +32,13 @@ public class ProdutosController : ControllerBase
         return Ok(produtos);
     }
 
+    // GET: api/produtos/empresa/3/saldo
+    [HttpGet("empresa/{empresaId:int}/saldo")]
+    public async Task<IActionResult> GetSaldoByEmpresa(int empresaId)
+    {
+        return Ok(await _service.GetSaldoByEmpresaIdAsync(empresaId));
+    }
+
     // GET: api/produtos/5
     [HttpGet("{id:int}")]
     public async Task<ActionResult<Produto>> GetById(int id)

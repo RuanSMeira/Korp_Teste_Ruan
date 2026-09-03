@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { HeaderComponent } from '../../core/header/header';
+import { ProdutoService } from '../../app/core/api/produto.service';
+import { SessaoService } from '../../app/core/api/sessao.service';
 
 @Component({
   selector: 'app-cadastrar-produto',
@@ -10,31 +12,53 @@ import { HeaderComponent } from '../../core/header/header';
 })
 export class CadastrarProdutoComponent {
   private fb = new FormBuilder();
-
-  categorias = ['Fixadores', 'Metalurgia', 'Elétrica', 'Pneumática', 'Ferramentas', 'Consumíveis', 'Filtros'];
-  unidades = ['Unidade (un)', 'Metro (m)', 'Kilograma (kg)', 'Litro (l)', 'Caixa (cx)'];
+  private readonly produtoService = inject(ProdutoService);
+  private readonly sessao = inject(SessaoService);
+  mensagem = '';
+  erro = '';
+  salvando = false;
 
   form = this.fb.group({
-    nome: ['', Validators.required],
-    sku: ['', Validators.required],
-    categoria: [''],
-    unidade: [''],
-    precoCusto: [0, [Validators.required, Validators.min(0)]],
-    precoVenda: [0, [Validators.required, Validators.min(0)]],
-    estoqueInicial: [0, [Validators.required, Validators.min(0)]],
-    descricao: [''],
+    codigo: ['', [Validators.required, Validators.maxLength(50)]],
+    descricao: ['', [Validators.required, Validators.maxLength(500)]],
+    saldoInicial: [0, [Validators.required, Validators.min(0)]],
   });
 
   onCancelar(): void {
-    this.form.reset({ precoCusto: 0, precoVenda: 0, estoqueInicial: 0 });
+    this.form.reset({ saldoInicial: 0 });
   }
 
   onSalvar(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
+      this.erro = 'Revise os campos obrigatórios e os valores informados.';
       return;
     }
-    // TODO: integrar com o serviço de produtos
-    console.log('Produto a salvar:', this.form.value);
+    this.salvando = true;
+    this.mensagem = '';
+    this.erro = '';
+    const value = this.form.getRawValue();
+    const empresaId = this.sessao.obterEmpresaId();
+    if (!empresaId) {
+      this.erro = 'Sua sessão expirou. Faça login novamente para cadastrar produtos.';
+      this.salvando = false;
+      return;
+    }
+    this.produtoService.criar({
+      empresaId,
+      codigo: value.codigo ?? '',
+      descricao: value.descricao ?? '',
+      saldoInicial: Number(value.saldoInicial ?? 0)
+    }).subscribe({
+      next: (produto) => {
+        this.mensagem = `Produto ${produto.codigo} cadastrado com sucesso.`;
+        this.salvando = false;
+        this.form.reset({ saldoInicial: 0 });
+      },
+      error: (error: Error) => {
+        this.erro = error.message;
+        this.salvando = false;
+      }
+    });
   }
 }

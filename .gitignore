@@ -482,3 +482,13 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+
+# Coleções locais do Postman
+*.postman_collection.json
+
+# Documentações e arquivos locais
+*.pdf
+
+# Artefatos não mapeados do Backend
+Korp_Teste_Ruan_Backend/dotnet

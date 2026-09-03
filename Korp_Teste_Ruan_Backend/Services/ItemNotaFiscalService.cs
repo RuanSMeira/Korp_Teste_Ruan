@@ -27,14 +27,6 @@ public class ItemNotaFiscalService : IItemNotaFiscalService
         if (produto is null)
             throw new ArgumentException($"Não existe produto com o ID '{item.ProdutoId}'.");
 
-        if (produto.Saldo < item.QuantidadeProduto)
-            throw new InvalidOperationException(
-                $"Saldo insuficiente para o produto '{produto.Descricao}'. Saldo atual: {produto.Saldo}, solicitado: {item.QuantidadeProduto}.");
-
-        produto.Saldo -= item.QuantidadeProduto;
-
-        await _produtoRepository.UpdateAsync(produto);
-
         return await _itemRepository.AddAsync(item);
     }
 }

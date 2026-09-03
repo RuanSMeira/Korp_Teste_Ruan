@@ -9,6 +9,7 @@
     <label class="text-[#111827] text-sm font-semibold">E-mail</label>
     <input type="email" formControlName="email" placeholder="colaborador@viasoft.com.br" 
       class="h-12 px-4 bg-[#F8FAFC] border border-[#E5E7EB] rounded-lg text-[15px] focus:outline-none focus:border-[#E11A55] transition-all" />
+    @if (loginUsuarioForm.controls['email'].invalid && loginUsuarioForm.controls['email'].touched) { <span class="text-xs text-red-600">Informe um e-mail válido.</span> }
   </div>
 
   <div class="flex flex-col gap-2">
@@ -23,15 +24,20 @@
         </svg>
       </button>
     </div>
+    @if (loginUsuarioForm.controls['senha'].invalid && loginUsuarioForm.controls['senha'].touched) { <span class="text-xs text-red-600">Informe sua senha.</span> }
   </div>
+
+  @if (erro) {
+    <p role="alert" class="rounded-lg bg-red-50 p-3 text-sm font-semibold text-red-600">{{ erro }}</p>
+  }
 
   <div class="flex justify-end">
     <!-- Link de esqueci a senha (pode direcionar para a rota de recuperação no futuro) -->
     <a href="#" class="text-[#E11A55] text-sm font-semibold hover:underline">Esqueci minha senha</a>
   </div>
 
-  <button type="submit" class="w-full bg-[#E11A55] text-white py-3.5 rounded-lg font-bold shadow-[0_4px_12px_rgba(225,26,85,0.20)] hover:bg-rose-700 transition-colors mt-2">
-    Entrar no Sistema
+  <button type="submit" [disabled]="entrando" class="w-full bg-[#E11A55] text-white py-3.5 rounded-lg font-bold shadow-[0_4px_12px_rgba(225,26,85,0.20)] hover:bg-rose-700 transition-colors mt-2 disabled:opacity-50">
+    {{ entrando ? 'Entrando...' : 'Entrar no Sistema' }}
   </button>
 </form>
 

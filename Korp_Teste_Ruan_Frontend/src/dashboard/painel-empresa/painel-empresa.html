@@ -4,6 +4,13 @@
     subtitle="Seja bem-vindo de volta! Transforme dados em decisões ágeis no ecossistema KORP."
   />
 
+  @if (carregando) {
+    <p class="text-[#4B5563] text-sm">Carregando dados da empresa...</p>
+  }
+  @if (erro) {
+    <p class="text-[#E11A55] text-sm">{{ erro }}</p>
+  }
+
   <!-- Cards de métricas -->
   <div class="w-full flex items-start gap-4">
     @for (m of metrics; track m.label) {
@@ -54,8 +61,8 @@
           @for (d of chartData; track d.label) {
             <div class="flex flex-col items-center gap-2">
               <div class="flex items-end gap-1">
-                <div class="w-3 bg-[#E11A55] rounded-t" [style.height.px]="d.nfe"></div>
-                <div class="w-3 bg-[#1A1F35] rounded-t" [style.height.px]="d.outros"></div>
+          <div class="w-3 bg-[#10B981] rounded-t" [style.height.px]="d.entradas * 12"></div>
+          <div class="w-3 bg-[#E11A55] rounded-t" [style.height.px]="d.saidas * 12"></div>
               </div>
               <span class="text-[#4B5563] text-xs">{{ d.label }}</span>
             </div>
@@ -64,10 +71,10 @@
       </div>
 
       <div class="w-full flex justify-between items-center">
-        <span class="text-[#9CA3AF] text-xs">Dados sincronizados em tempo real com a SEFAZ.</span>
-        <button type="button" class="px-4 py-2.5 bg-[#E11A55] rounded-lg text-white text-[13px] font-bold hover:bg-[#c81749] transition-colors">
-          Emitir Nova Nota
-        </button>
+        <span class="text-[#9CA3AF] text-xs">Entradas e saídas registradas no estoque.</span>
+        <a routerLink="/app/estoque" class="px-4 py-2.5 bg-[#E11A55] rounded-lg text-white text-[13px] font-bold hover:bg-[#c81749] transition-colors no-underline">
+          Ver estoque
+        </a>
       </div>
     </div>
 
@@ -76,7 +83,7 @@
       <div class="w-full pb-2 flex justify-between items-center">
         <div class="flex flex-col gap-1">
           <h2 class="text-[#111827] text-lg font-extrabold">Atividades Recentes</h2>
-          <p class="text-[#4B5563] text-xs">Registro de ações executadas no ERP</p>
+          <p class="text-[#4B5563] text-xs">Últimas movimentações da empresa</p>
         </div>
         <div class="p-2 bg-[#F8FAFC] rounded-lg">
           <svg class="w-[18px] h-[18px] text-[#10B981]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -104,9 +111,9 @@
       </div>
 
       <div class="w-full pt-3 flex justify-center">
-        <button type="button" class="text-[#E11A55] text-[13px] font-bold hover:underline">
+        <a routerLink="/app/estoque" class="text-[#E11A55] text-[13px] font-bold hover:underline no-underline">
           Ver todo o histórico de atividades
-        </button>
+        </a>
       </div>
     </div>
   </div>

@@ -9,6 +9,7 @@
     <label class="text-[#111827] text-sm font-semibold">Nome Completo</label>
     <input type="text" formControlName="nome" placeholder="Ex: João da Silva" 
       class="h-12 px-4 bg-[#F8FAFC] border border-[#E5E7EB] rounded-lg text-[15px] focus:outline-none focus:border-[#E11A55] transition-all" />
+    @if (cadastroForm.controls['nome'].invalid && cadastroForm.controls['nome'].touched) { <span class="text-xs text-red-600">Nome é obrigatório.</span> }
   </div>
 
   <!-- E-mail -->
@@ -16,6 +17,7 @@
     <label class="text-[#111827] text-sm font-semibold">E-mail</label>
     <input type="email" formControlName="email" placeholder="exemplo@empresa.com.br" 
       class="h-12 px-4 bg-[#F8FAFC] border border-[#E5E7EB] rounded-lg text-[15px] focus:outline-none focus:border-[#E11A55] transition-all" />
+    @if (cadastroForm.controls['email'].invalid && cadastroForm.controls['email'].touched) { <span class="text-xs text-red-600">Informe um e-mail válido.</span> }
   </div>
 
   <!-- Senha -->
@@ -23,6 +25,7 @@
     <label class="text-[#111827] text-sm font-semibold">Senha de Acesso</label>
     <input type="password" formControlName="senha" placeholder="Crie uma senha forte" 
       class="h-12 px-4 w-full bg-[#F8FAFC] border border-[#E5E7EB] rounded-lg text-[15px] focus:outline-none focus:border-[#E11A55] transition-all" />
+    @if (cadastroForm.controls['senha'].invalid && cadastroForm.controls['senha'].touched) { <span class="text-xs text-red-600">A senha deve ter pelo menos 8 caracteres.</span> }
   </div>
 
   <!-- Confirmar Senha -->
@@ -30,10 +33,15 @@
     <label class="text-[#111827] text-sm font-semibold">Confirmar Senha</label>
     <input type="password" formControlName="confirmarSenha" placeholder="Repita a senha criada" 
       class="h-12 px-4 w-full bg-[#F8FAFC] border border-[#E5E7EB] rounded-lg text-[15px] focus:outline-none focus:border-[#E11A55] transition-all" />
+    @if (cadastroForm.controls['confirmarSenha'].invalid && cadastroForm.controls['confirmarSenha'].touched) { <span class="text-xs text-red-600">Confirme a senha.</span> }
   </div>
 
+  @if (erro) {
+    <p role="alert" class="rounded-lg bg-red-50 p-3 text-sm font-semibold text-red-600">{{ erro }}</p>
+  }
+
   <button type="submit" class="w-full bg-[#E11A55] text-white py-3.5 rounded-lg font-bold mt-2 hover:bg-rose-700 transition-colors shadow-md">
-    Criar Minha Conta
+    {{ salvando ? 'Criando...' : 'Criar Minha Conta' }}
   </button>
 </form>
 

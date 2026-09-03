@@ -1,4 +1,11 @@
 <div class="flex flex-col items-start gap-8 font-['Outfit']">
+  @if (carregando) { <p class="text-[#6B7280] text-sm">Carregando produtos...</p> }
+  @if (erro) {
+    <div class="w-full p-4 rounded-lg bg-red-50 text-red-700 text-sm flex items-center justify-between gap-4">
+      <span>{{ erro }}</span>
+      <button type="button" (click)="carregar()" class="shrink-0 font-bold underline">Tentar novamente</button>
+    </div>
+  }
   <div class="flex flex-col gap-1">
     <h1 class="text-[#111827] text-2xl font-extrabold">Consulta de Saldos</h1>
     <p class="text-[#6B7280] text-sm">Controle total do valor investido e distribuição do estoque ativo.</p>
@@ -16,14 +23,14 @@
         </div>
       </div>
       <div class="flex flex-col gap-2">
-        <span class="text-[#111827] text-2xl font-extrabold">12.847 un</span>
+        <span class="text-[#111827] text-2xl font-extrabold">{{ resumo.totalProdutos }} itens</span>
         <span class="text-[#9CA3AF] text-xs">Cadastros ativos no ERP</span>
       </div>
     </div>
 
     <div class="flex-1 p-6 bg-white rounded-2xl border border-[#E5E7EB] flex flex-col gap-4">
       <div class="w-full flex justify-between items-center">
-        <span class="text-[#4B5563] text-[13px] font-semibold uppercase">Valor Total em Estoque</span>
+        <span class="text-[#4B5563] text-[13px] font-semibold uppercase">Saldo Total em Estoque</span>
         <div class="p-2 bg-[#10B981]/[.08] rounded-lg">
           <svg class="w-[18px] h-[18px] text-[#10B981]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 12V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-1"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/>
@@ -31,8 +38,8 @@
         </div>
       </div>
       <div class="flex flex-col gap-2">
-        <span class="text-[#111827] text-2xl font-extrabold">R$ 1.248.590,00</span>
-        <span class="text-[#9CA3AF] text-xs">Capital imobilizado</span>
+        <span class="text-[#111827] text-2xl font-extrabold">{{ resumo.saldoTotal.toLocaleString('pt-BR') }} un</span>
+        <span class="text-[#9CA3AF] text-xs">Somatório dos saldos cadastrados</span>
       </div>
     </div>
 
@@ -46,7 +53,7 @@
         </div>
       </div>
       <div class="flex flex-col gap-2">
-        <span class="text-[#111827] text-2xl font-extrabold">142 Itens</span>
+        <span class="text-[#111827] text-2xl font-extrabold">{{ resumo.produtosBaixoEstoque }} itens</span>
         <div class="flex items-center gap-1">
           <svg class="w-[18px] h-[18px] text-[#E11A55]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><path d="M12 9v4M12 17h.01"/>
@@ -67,7 +74,7 @@
         </div>
       </div>
       <div class="flex flex-col gap-2">
-        <span class="text-[#111827] text-2xl font-extrabold">8 Itens</span>
+        <span class="text-[#111827] text-2xl font-extrabold">{{ resumo.produtosSemEstoque }} itens</span>
         <span class="text-[#9CA3AF] text-xs">Necessitam compra urgente</span>
       </div>
     </div>

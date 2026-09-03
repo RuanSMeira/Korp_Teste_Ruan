@@ -8,40 +8,41 @@
   <div class="flex flex-col gap-2">
     <label class="text-[#111827] text-sm font-semibold">Razão Social</label>
     <input type="text" formControlName="razaoSocial" placeholder="Insira o nome da sua empresa" 
+      [class.border-red-500]="empresaForm.controls['razaoSocial'].invalid && empresaForm.controls['razaoSocial'].touched"
       class="h-12 px-4 bg-[#F8FAFC] border border-[#E5E7EB] rounded-lg text-[15px] focus:outline-none focus:border-[#E11A55] transition-all" />
+    @if (empresaForm.controls['razaoSocial'].invalid && empresaForm.controls['razaoSocial'].touched) { <span class="text-xs text-red-600">Informe a razão social.</span> }
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <label class="text-[#111827] text-sm font-semibold">Senha Master</label>
+    <input type="password" formControlName="senhaMaster" placeholder="Mínimo de 8 caracteres"
+      [class.border-red-500]="empresaForm.controls['senhaMaster'].invalid && empresaForm.controls['senhaMaster'].touched"
+      class="h-12 px-4 bg-[#F8FAFC] border border-[#E5E7EB] rounded-lg text-[15px] focus:outline-none focus:border-[#E11A55] transition-all" />
+    @if (empresaForm.controls['senhaMaster'].invalid && empresaForm.controls['senhaMaster'].touched) { <span class="text-xs text-red-600">Informe uma senha master com ao menos 8 caracteres.</span> }
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <label class="text-[#111827] text-sm font-semibold">Nome Fantasia</label>
+    <input type="text" formControlName="nomeFantasia" placeholder="Nome comercial da empresa"
+      [class.border-red-500]="empresaForm.controls['nomeFantasia'].invalid && empresaForm.controls['nomeFantasia'].touched"
+      class="h-12 px-4 bg-[#F8FAFC] border border-[#E5E7EB] rounded-lg text-[15px] focus:outline-none focus:border-[#E11A55] transition-all" />
+    @if (empresaForm.controls['nomeFantasia'].invalid && empresaForm.controls['nomeFantasia'].touched) { <span class="text-xs text-red-600">Informe o nome fantasia.</span> }
   </div>
 
   <div class="flex flex-col gap-2">
     <label class="text-[#111827] text-sm font-semibold">CNPJ</label>
-    <input type="text" formControlName="cnpj" placeholder="00.000.000/0000-00" 
+    <input type="text" formControlName="cnpj" placeholder="00.000.000/0000-00"
+      [class.border-red-500]="empresaForm.controls['cnpj'].invalid && empresaForm.controls['cnpj'].touched"
       class="h-12 px-4 bg-[#F8FAFC] border border-[#E5E7EB] rounded-lg text-[15px] focus:outline-none focus:border-[#E11A55] transition-all" />
+    @if (empresaForm.controls['cnpj'].invalid && empresaForm.controls['cnpj'].touched) { <span class="text-xs text-red-600">Informe um CNPJ com 14 dígitos.</span> }
   </div>
 
-  <div class="flex flex-col gap-2">
-    <label class="text-[#111827] text-sm font-semibold">E-mail de Contato</label>
-    <input type="email" formControlName="email" placeholder="faturamento@empresa.com.br" 
-      class="h-12 px-4 bg-[#F8FAFC] border border-[#E5E7EB] rounded-lg text-[15px] focus:outline-none focus:border-[#E11A55] transition-all" />
-  </div>
+  @if (erro) {
+    <p role="alert" class="rounded-lg bg-red-50 p-3 text-sm font-semibold text-red-600">{{ erro }}</p>
+  }
 
-  <div class="flex flex-col gap-2">
-    <label class="text-[#111827] text-sm font-semibold">Telefone Comercial</label>
-    <input type="text" formControlName="telefone" placeholder="(00) 00000-0000" 
-      class="h-12 px-4 bg-[#F8FAFC] border border-[#E5E7EB] rounded-lg text-[15px] focus:outline-none focus:border-[#E11A55] transition-all" />
-  </div>
-
-  <div class="flex flex-col gap-2">
-    <label class="text-[#111827] text-sm font-semibold">Setor de Atuação</label>
-    <select formControlName="setor" 
-      class="h-12 px-4 bg-[#F8FAFC] border border-[#E5E7EB] rounded-lg text-[15px] text-[#4B5563] focus:outline-none focus:border-[#E11A55] transition-all">
-      <option value="" disabled selected>Selecione o segmento principal</option>
-      <option value="industria">Indústria</option>
-      <option value="logistica">Logística</option>
-      <option value="varejo">Varejo</option>
-    </select>
-  </div>
-
-  <button type="submit" class="w-full bg-[#E11A55] text-white py-3.5 rounded-lg font-bold mt-4 hover:bg-rose-700 transition-colors shadow-md">
-    Cadastrar Empresa
+  <button type="submit" [disabled]="salvando" class="w-full bg-[#E11A55] text-white py-3.5 rounded-lg font-bold mt-4 hover:bg-rose-700 transition-colors shadow-md disabled:opacity-50">
+    {{ salvando ? 'Cadastrando...' : 'Cadastrar Empresa' }}
   </button>
 </form>
 

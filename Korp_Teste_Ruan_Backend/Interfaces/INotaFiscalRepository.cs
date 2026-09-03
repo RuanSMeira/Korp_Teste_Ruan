@@ -5,6 +5,7 @@ using Korp_Teste_Ruan_Backend.Models;
 public interface INotaFiscalRepository
 {
     Task<IEnumerable<NotaFiscal>> GetAllAsync();
+    Task<IEnumerable<NotaFiscal>> GetAllByEmpresaAsync(int empresaId);
     Task<NotaFiscal?> GetByIdAsync(int id);
     Task<NotaFiscal?> GetByIdComItensAsync(int id);
     Task<NotaFiscal> AddAsync(NotaFiscal notaFiscal);

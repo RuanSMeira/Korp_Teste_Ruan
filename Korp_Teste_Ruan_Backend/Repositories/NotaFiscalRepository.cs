@@ -20,6 +20,16 @@ public class NotaFiscalRepository : INotaFiscalRepository
             .ToListAsync();
     }
 
+    public async Task<IEnumerable<NotaFiscal>> GetAllByEmpresaAsync(int empresaId)
+    {
+        return await _context.NotasFiscais
+            .AsNoTracking()
+            .Include(n => n.Itens)
+            .Where(n => n.EmpresaId == empresaId)
+            .OrderByDescending(n => n.NumeroSequencial)
+            .ToListAsync();
+    }
+
     public async Task<NotaFiscal?> GetByIdAsync(int id)
     {
         return await _context.NotasFiscais

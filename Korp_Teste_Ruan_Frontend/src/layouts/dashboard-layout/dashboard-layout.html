@@ -31,6 +31,12 @@
           <span class="flex-1">Painel da Empresa</span>
         </a>
 
+        <a routerLink="/app/estoque" routerLinkActive="bg-[#E11A55] font-bold text-white"
+           class="px-4 py-3 rounded-lg flex items-center gap-3 text-sm text-[#9CA3AF] font-medium hover:bg-white/5 transition-colors cursor-pointer no-underline">
+          <div class="w-[18px] h-[18px] border-2 border-current rounded-[3px] opacity-70"></div>
+          <span class="flex-1">Serviço de Estoque</span>
+        </a>
+
         <a routerLink="/app/faturamento" routerLinkActive="bg-[#E11A55] font-bold text-white"
            class="px-4 py-3 rounded-lg flex items-center gap-3 text-sm text-[#9CA3AF] font-medium hover:bg-white/5 transition-colors cursor-pointer no-underline">
           <div class="w-[18px] h-[18px] border-2 border-current rounded-[3px] opacity-70"></div>
@@ -43,17 +49,16 @@
     <div class="flex flex-col gap-5">
       <div class="h-px bg-[#2E3B5E] w-full"></div>
       <div class="p-2 bg-[#1A1F35] rounded-xl flex items-center gap-3">
-        <div class="w-10 h-10 bg-[#E11A55] rounded-lg flex justify-center items-center text-white text-lg font-extrabold">V</div>
+        <div class="w-10 h-10 bg-[#E11A55] rounded-lg flex justify-center items-center text-white text-lg font-extrabold">{{ nomeEmpresa.charAt(0) }}</div>
         <div class="flex flex-col flex-1">
-          <span class="text-white text-sm font-bold">Viasoft Matriz</span>
-          <span class="text-[#9CA3AF] text-[11px]">CNPJ: 00.000.000/0001-00</span>
+          <span class="text-white text-sm font-bold truncate">{{ nomeEmpresa }}</span>
+          <span class="text-[#9CA3AF] text-[11px]">CNPJ: {{ cnpjEmpresa }}</span>
         </div>
       </div>
-      <!-- Sugestão: adicione routerLink="/auth/login" no botão sair para simular o logout -->
-      <a routerLink="/auth/login" class="flex items-center gap-3 pl-4 bg-transparent border-none text-[#9CA3AF] hover:text-white transition-colors cursor-pointer no-underline">
+      <button type="button" (click)="encerrarSessao()" class="flex items-center gap-3 pl-4 bg-transparent border-none text-[#9CA3AF] hover:text-white transition-colors cursor-pointer no-underline">
         <div class="w-[18px] h-[18px] border-2 border-current rounded-[3px] opacity-70"></div>
         <span class="text-sm font-semibold">Sair do Sistema</span>
-      </a>
+      </button>
     </div>
   </aside>
 
@@ -72,8 +77,8 @@
       </button>
       
       <div class="flex items-center gap-2.5 p-1.5 pr-4 bg-white border border-[#E5E7EB] rounded-full cursor-pointer hover:bg-gray-50 transition-colors">
-        <img src="https://placehold.co/32x32" alt="Avatar" class="w-8 h-8 rounded-full">
-        <span class="text-sm font-semibold text-[#111827]">Ana Silva</span>
+        <div class="w-8 h-8 rounded-full bg-[#E11A55] text-white flex items-center justify-center text-sm font-bold">{{ nomeUsuario.charAt(0) }}</div>
+        <span class="text-sm font-semibold text-[#111827]">{{ nomeUsuario }}</span>
       </div>
     </header>
 

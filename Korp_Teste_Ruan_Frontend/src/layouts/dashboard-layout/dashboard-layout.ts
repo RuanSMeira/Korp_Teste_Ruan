@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { SessaoService } from '../../app/core/api/sessao.service';
 
 @Component({
   selector: 'app-dashboard-layout',
@@ -9,5 +10,23 @@ import { RouterModule } from '@angular/router';
   templateUrl: './dashboard-layout.html'
 })
 export class DashboardLayoutComponent {
-  // Você pode colocar a lógica do usuário logado aqui, como pegar o nome "Ana Silva" do serviço de autenticação
+  private readonly sessao = inject(SessaoService);
+  private readonly router = inject(Router);
+
+  get nomeUsuario(): string {
+    return this.sessao.obterNomeExibicao();
+  }
+
+  get nomeEmpresa(): string {
+    return this.sessao.obterEmpresaNome();
+  }
+
+  get cnpjEmpresa(): string {
+    return this.sessao.obterEmpresaCnpj();
+  }
+
+  encerrarSessao(): void {
+    this.sessao.encerrar();
+    this.router.navigate(['/auth/usuario']);
+  }
 }

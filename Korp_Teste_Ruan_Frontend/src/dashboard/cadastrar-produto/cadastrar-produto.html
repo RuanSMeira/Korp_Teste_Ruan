@@ -5,6 +5,8 @@
   />
 
   <form [formGroup]="form" (ngSubmit)="onSalvar()" class="w-full p-8 bg-white rounded-[20px] border border-[#E5E7EB] flex flex-col gap-7">
+    @if (mensagem) { <p class="p-3 rounded-lg bg-emerald-50 text-emerald-700 text-sm">{{ mensagem }}</p> }
+    @if (erro) { <p class="p-3 rounded-lg bg-red-50 text-red-700 text-sm">{{ erro }}</p> }
     <div class="w-full pb-4 border-b border-[#E5E7EB] flex flex-col gap-1">
       <h2 class="text-[#111827] text-lg font-extrabold">Informações do Produto</h2>
       <p class="text-[#4B5563] text-[13px]">Dados principais de estoque, vendas e controle de movimentação física.</p>
@@ -14,94 +16,30 @@
       <!-- Linha 1 -->
       <div class="w-full flex items-start gap-5">
         <div class="flex-1 flex flex-col gap-2">
-          <label for="nome" class="text-[#111827] text-[13px] font-semibold">Nome do Produto</label>
+          <label for="codigo" class="text-[#111827] text-[13px] font-semibold">Código do Produto</label>
           <input
-            id="nome"
+            id="codigo"
             type="text"
-            formControlName="nome"
-            placeholder="Ex: Parafuso Sextavado de Aço M12"
-            class="w-full h-11 px-4 bg-white rounded-lg border border-[#E5E7EB] text-sm text-[#111827] placeholder:text-[#9CA3AF] focus:outline-none focus:ring-2 focus:ring-[#E11A55]/30 focus:border-[#E11A55]"
-          />
-        </div>
-        <div class="flex-1 flex flex-col gap-2">
-          <label for="sku" class="text-[#111827] text-[13px] font-semibold">Código SKU</label>
-          <input
-            id="sku"
-            type="text"
-            formControlName="sku"
+            formControlName="codigo"
             placeholder="Ex: PRD-9482-L"
             class="w-full h-11 px-4 bg-white rounded-lg border border-[#E5E7EB] text-sm text-[#111827] placeholder:text-[#9CA3AF] focus:outline-none focus:ring-2 focus:ring-[#E11A55]/30 focus:border-[#E11A55]"
           />
+          @if (form.controls.codigo.invalid && form.controls.codigo.touched) { <span class="text-xs text-red-600">Código do produto é obrigatório.</span> }
+        </div>
+        <div class="flex-1 flex flex-col gap-2">
+          <label for="saldoInicial" class="text-[#111827] text-[13px] font-semibold">Saldo Inicial</label>
+          <input
+            id="saldoInicial"
+            type="number"
+            min="0"
+            formControlName="saldoInicial"
+            class="w-full h-11 px-4 bg-white rounded-lg border border-[#E5E7EB] text-sm text-[#111827] placeholder:text-[#9CA3AF] focus:outline-none focus:ring-2 focus:ring-[#E11A55]/30 focus:border-[#E11A55]"
+          />
+          @if (form.controls.saldoInicial.invalid && form.controls.saldoInicial.touched) { <span class="text-xs text-red-600">Informe um saldo inicial válido.</span> }
         </div>
       </div>
 
-      <!-- Linha 2 -->
-      <div class="w-full flex items-start gap-5">
-        <div class="flex-1 flex flex-col gap-2">
-          <label for="categoria" class="text-[#111827] text-[13px] font-semibold">Categoria</label>
-          <select
-            id="categoria"
-            formControlName="categoria"
-            class="w-full h-11 px-4 bg-white rounded-lg border border-[#E5E7EB] text-sm text-[#111827] focus:outline-none focus:ring-2 focus:ring-[#E11A55]/30 focus:border-[#E11A55]"
-          >
-            <option value="" disabled selected>Selecione uma categoria...</option>
-            @for (c of categorias; track c) {
-              <option [value]="c">{{ c }}</option>
-            }
-          </select>
-        </div>
-        <div class="flex-1 flex flex-col gap-2">
-          <label for="unidade" class="text-[#111827] text-[13px] font-semibold">Unidade de Medida</label>
-          <select
-            id="unidade"
-            formControlName="unidade"
-            class="w-full h-11 px-4 bg-white rounded-lg border border-[#E5E7EB] text-sm text-[#111827] focus:outline-none focus:ring-2 focus:ring-[#E11A55]/30 focus:border-[#E11A55]"
-          >
-            <option value="" disabled selected>Unidade (un), Metro (m), Kilograma (kg)...</option>
-            @for (u of unidades; track u) {
-              <option [value]="u">{{ u }}</option>
-            }
-          </select>
-        </div>
-      </div>
-
-      <!-- Linha 3 -->
-      <div class="w-full flex items-start gap-5">
-        <div class="flex-1 flex flex-col gap-2">
-          <label for="precoCusto" class="text-[#111827] text-[13px] font-semibold">Preço de Custo (R$)</label>
-          <input
-            id="precoCusto"
-            type="number"
-            step="0.01"
-            min="0"
-            formControlName="precoCusto"
-            class="w-full h-11 px-4 bg-white rounded-lg border border-[#E5E7EB] text-sm text-[#111827] focus:outline-none focus:ring-2 focus:ring-[#E11A55]/30 focus:border-[#E11A55]"
-          />
-        </div>
-        <div class="flex-1 flex flex-col gap-2">
-          <label for="precoVenda" class="text-[#111827] text-[13px] font-semibold">Preço de Venda (R$)</label>
-          <input
-            id="precoVenda"
-            type="number"
-            step="0.01"
-            min="0"
-            formControlName="precoVenda"
-            class="w-full h-11 px-4 bg-white rounded-lg border border-[#E5E7EB] text-sm text-[#111827] focus:outline-none focus:ring-2 focus:ring-[#E11A55]/30 focus:border-[#E11A55]"
-          />
-        </div>
-        <div class="flex-1 flex flex-col gap-2">
-          <label for="estoqueInicial" class="text-[#111827] text-[13px] font-semibold">Estoque Inicial</label>
-          <input
-            id="estoqueInicial"
-            type="number"
-            min="0"
-            formControlName="estoqueInicial"
-            class="w-full h-11 px-4 bg-white rounded-lg border border-[#E5E7EB] text-sm text-[#111827] focus:outline-none focus:ring-2 focus:ring-[#E11A55]/30 focus:border-[#E11A55]"
-          />
-        </div>
-      </div>
-
-      <!-- Linha 4 -->
+      <!-- Descrição conforme CriarProdutoRequest -->
       <div class="w-full flex items-start gap-5">
         <div class="flex-1 flex flex-col gap-2">
           <label for="descricao" class="text-[#111827] text-[13px] font-semibold">Descrição Curta</label>
@@ -126,9 +64,10 @@
       </button>
       <button
         type="submit"
+        [disabled]="salvando"
         class="px-7 py-3 pl-7 bg-[#E11A55] rounded-lg text-white text-sm font-bold hover:bg-[#c81749] transition-colors"
       >
-        Salvar Produto
+        {{ salvando ? 'Salvando...' : 'Salvar Produto' }}
       </button>
     </div>
   </form>

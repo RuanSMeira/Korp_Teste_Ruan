@@ -4,6 +4,14 @@
     subtitle="Gerencie entradas, saídas e movimentações físicas entre filiais."
   />
 
+  @if (erro()) {
+    <div class="w-full rounded-lg bg-red-50 p-4 text-sm text-red-700 flex items-center justify-between gap-4">
+      <span>{{ erro() }}</span>
+      <button type="button" (click)="carregar()" class="shrink-0 font-bold underline">Tentar novamente</button>
+    </div>
+  }
+  @if (mensagem()) { <p class="w-full rounded-lg bg-emerald-50 p-3 text-sm text-emerald-700">{{ mensagem() }}</p> }
+
   <!-- Cards resumo -->
   <div class="w-full flex items-start gap-4">
     <div class="flex-1 p-6 bg-white rounded-2xl border border-[#E5E7EB] flex flex-col gap-4">
@@ -14,11 +22,9 @@
         </div>
       </div>
       <div class="flex flex-col gap-2">
-        <span class="text-[#111827] text-2xl font-extrabold">+250 itens</span>
+          <span class="text-[#111827] text-2xl font-extrabold">{{ movimentosHoje.filter(m => m.tipo === 'Entrada').length }} entradas</span>
         <div class="flex items-center gap-1">
-          <svg class="w-[18px] h-[18px] text-[#10B981]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 7 7 17M7 7h10v10"/></svg>
-          <span class="text-[#10B981] text-xs font-bold">+15%</span>
-          <span class="text-[#9CA3AF] text-xs">vs média diária</span>
+          <span class="text-[#9CA3AF] text-xs">Movimentações registradas hoje</span>
         </div>
       </div>
     </div>
@@ -31,11 +37,9 @@
         </div>
       </div>
       <div class="flex flex-col gap-2">
-        <span class="text-[#111827] text-2xl font-extrabold">-184 itens</span>
+          <span class="text-[#111827] text-2xl font-extrabold">{{ movimentosHoje.filter(m => m.tipo === 'Saida').length }} saídas</span>
         <div class="flex items-center gap-1">
-          <svg class="w-[18px] h-[18px] text-[#E11A55]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 7 7 17M7 7h10v10"/></svg>
-          <span class="text-[#E11A55] text-xs font-bold">+8%</span>
-          <span class="text-[#9CA3AF] text-xs">faturamento ativo</span>
+          <span class="text-[#9CA3AF] text-xs">Movimentações registradas hoje</span>
         </div>
       </div>
     </div>
@@ -50,8 +54,8 @@
         </div>
       </div>
       <div class="flex flex-col gap-2">
-        <span class="text-[#111827] text-2xl font-extrabold">8.421 SKU</span>
-        <span class="text-[#9CA3AF] text-xs">Com giro nos últimos 30 dias</span>
+        <span class="text-[#111827] text-2xl font-extrabold">{{ produtos().length }} SKU</span>
+        <span class="text-[#9CA3AF] text-xs">Produtos retornados pela empresa</span>
       </div>
     </div>
 
@@ -65,7 +69,7 @@
         </div>
       </div>
       <div class="flex flex-col gap-2">
-        <span class="text-[#111827] text-2xl font-extrabold">14 SKU</span>
+        <span class="text-[#111827] text-2xl font-extrabold">{{ produtos().filter(p => p.saldo < 10).length }} SKU</span>
         <span class="text-[#9CA3AF] text-xs">Crítico para produção</span>
       </div>
     </div>
@@ -100,10 +104,30 @@
           Saídas
         </button>
       </div>
-      <button type="button" class="px-5 py-2.5 bg-[#E11A55] rounded-lg text-white text-sm font-bold hover:bg-[#c81749] transition-colors">
+      <button type="button" (click)="formSection.scrollIntoView({ behavior: 'smooth' })" class="px-5 py-2.5 bg-[#E11A55] rounded-lg text-white text-sm font-bold hover:bg-[#c81749] transition-colors">
         Nova Movimentação
       </button>
     </div>
+
+    <form #formSection [formGroup]="form" (ngSubmit)="criar()" class="flex flex-wrap items-end gap-3 rounded-lg bg-[#F8FAFC] p-4">
+      <label class="flex min-w-[220px] flex-1 flex-col gap-1 text-xs font-bold text-[#4B5563]">Produto
+        <select formControlName="produtoId" class="rounded-lg border border-[#E5E7EB] bg-white px-3 py-2 text-sm font-normal text-[#111827]">
+          <option [ngValue]="0">Selecione um produto</option>
+          @for (produto of produtos(); track produto.produtoId) { <option [ngValue]="produto.produtoId">{{ produto.codigo }} - {{ produto.descricao }} (saldo: {{ produto.saldo }})</option> }
+        </select>
+      </label>
+      <label class="flex w-32 flex-col gap-1 text-xs font-bold text-[#4B5563]">Tipo
+        <select formControlName="tipo" class="rounded-lg border border-[#E5E7EB] bg-white px-3 py-2 text-sm font-normal text-[#111827]"><option value="Entrada">Entrada</option><option value="Saida">Saída</option></select>
+      </label>
+      <label class="flex w-28 flex-col gap-1 text-xs font-bold text-[#4B5563]">Quantidade
+        <input formControlName="quantidade" type="number" min="0.0001" step="0.0001" class="rounded-lg border border-[#E5E7EB] bg-white px-3 py-2 text-sm font-normal text-[#111827]" />
+      </label>
+      <label class="flex min-w-[180px] flex-1 flex-col gap-1 text-xs font-bold text-[#4B5563]">Observação
+        <input formControlName="observacao" maxlength="500" class="rounded-lg border border-[#E5E7EB] bg-white px-3 py-2 text-sm font-normal text-[#111827]" />
+      </label>
+      <button type="submit" [disabled]="salvando()" class="rounded-lg bg-[#E11A55] px-5 py-2.5 text-sm font-bold text-white disabled:opacity-50">{{ salvando() ? 'Salvando...' : 'Registrar' }}</button>
+      @if (form.invalid && form.touched) { <p class="w-full text-xs font-semibold text-red-600">Selecione um produto e informe uma quantidade maior que zero.</p> }
+    </form>
 
     <div class="w-full overflow-x-auto">
       <table class="w-full text-left border-collapse">
@@ -118,19 +142,21 @@
           </tr>
         </thead>
         <tbody>
-          @for (m of movimentosFiltrados(); track m.data + m.produto + m.quantidade) {
+          @if (carregando()) { <tr><td colspan="6" class="p-6 text-center text-sm text-[#6B7280]">Carregando movimentações...</td></tr> }
+          @else if (movimentosFiltrados().length === 0) { <tr><td colspan="6" class="p-6 text-center text-sm text-[#6B7280]">Nenhuma movimentação encontrada.</td></tr> }
+          @for (m of movimentosFiltrados(); track m.id) {
             <tr class="border-b border-[#E5E7EB] last:border-b-0">
-              <td class="p-3 text-[#111827] text-[13px] whitespace-nowrap">{{ m.data }}</td>
+              <td class="p-3 text-[#111827] text-[13px] whitespace-nowrap">{{ formatarData(m.dataMovimentacao) }}</td>
               <td class="p-3 whitespace-nowrap">
                 <span
                   class="inline-block px-2.5 py-1 rounded text-xs font-bold"
                   [class]="m.tipo === 'Entrada' ? 'bg-[#10B981]/[.08] text-[#10B981]' : 'bg-[#E11A55]/[.08] text-[#E11A55]'"
                 >
-                  {{ m.tipo }}
+                  {{ m.tipo === 'Saida' ? 'Saída' : m.tipo }}
                 </span>
               </td>
               <td class="p-3 text-[#111827] text-[13px] whitespace-nowrap">{{ m.produto }}</td>
-              <td class="p-3 text-[#111827] text-[13px] font-bold text-right whitespace-nowrap">{{ m.quantidade }}</td>
+              <td class="p-3 text-[#111827] text-[13px] font-bold text-right whitespace-nowrap">{{ m.tipo === 'Entrada' ? '+' : '-' }}{{ m.quantidade }} un</td>
               <td class="p-3 text-[#4B5563] text-[13px] whitespace-nowrap">{{ m.responsavel }}</td>
               <td class="p-3 text-[#4B5563] text-[13px]">{{ m.observacao }}</td>
             </tr>

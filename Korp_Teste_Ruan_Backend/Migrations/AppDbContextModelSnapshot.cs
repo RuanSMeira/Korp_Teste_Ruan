@@ -45,6 +45,11 @@ namespace Korp_Teste_Ruan_Backend.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
+                    b.Property<string>("SenhaMaster")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
                     b.HasKey("EmpresaId");
 
                     b.HasIndex("Cnpj")
@@ -78,6 +83,57 @@ namespace Korp_Teste_Ruan_Backend.Migrations
                     b.HasIndex("ProdutoId");
 
                     b.ToTable("ItensNotaFiscal");
+                });
+
+            modelBuilder.Entity("Korp_Teste_Ruan_Backend.Models.MovimentacaoEstoque", b =>
+                {
+                    b.Property<int>("MovimentacaoEstoqueId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MovimentacaoEstoqueId"));
+
+                    b.Property<DateTime>("DataMovimentacao")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("EmpresaId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Observacao")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<int>("ProdutoId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Quantidade")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<decimal>("SaldoAnterior")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<decimal>("SaldoPosterior")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<int>("Tipo")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int");
+
+                    b.HasKey("MovimentacaoEstoqueId");
+
+                    b.HasIndex("EmpresaId");
+
+                    b.HasIndex("ProdutoId");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("MovimentacoesEstoque");
                 });
 
             modelBuilder.Entity("Korp_Teste_Ruan_Backend.Models.NotaFiscal", b =>
@@ -208,6 +264,33 @@ namespace Korp_Teste_Ruan_Backend.Migrations
                     b.Navigation("NotaFiscal");
 
                     b.Navigation("Produto");
+                });
+
+            modelBuilder.Entity("Korp_Teste_Ruan_Backend.Models.MovimentacaoEstoque", b =>
+                {
+                    b.HasOne("Korp_Teste_Ruan_Backend.Models.Empresa", "Empresa")
+                        .WithMany()
+                        .HasForeignKey("EmpresaId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Korp_Teste_Ruan_Backend.Models.Produto", "Produto")
+                        .WithMany()
+                        .HasForeignKey("ProdutoId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Korp_Teste_Ruan_Backend.Models.Usuario", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Empresa");
+
+                    b.Navigation("Produto");
+
+                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("Korp_Teste_Ruan_Backend.Models.NotaFiscal", b =>

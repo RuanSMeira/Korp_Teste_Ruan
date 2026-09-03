@@ -2,6 +2,7 @@ namespace Korp_Teste_Ruan_Backend.Services;
 
 using Korp_Teste_Ruan_Backend.Models;
 using Korp_Teste_Ruan_Backend.Interfaces;
+using Korp_Teste_Ruan_Backend.DTOs.Request;
 
 public class UsuarioService
 {
@@ -39,6 +40,16 @@ public class UsuarioService
             throw new ArgumentException("A senha é obrigatória.");
 
         return await _repository.AddAsync(usuario);
+    }
+
+    public async Task<Usuario?> LoginAsync(LoginRequest request)
+    {
+        var usuario = await _repository.GetByEmailAsync(request.Email);
+
+        if (usuario is null || usuario.SenhaHash != request.Senha)
+            return null;
+
+        return usuario;
     }
 
     public async Task<Usuario?> UpdateAsync(int id, Usuario usuario)

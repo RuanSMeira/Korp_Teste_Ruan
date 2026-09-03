@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Korp_Teste_Ruan_Backend.Models;
 using Korp_Teste_Ruan_Backend.Repositories;
 using Korp_Teste_Ruan_Backend.Data;
+using Korp_Teste_Ruan_Backend.DTOs.Response;
 
 public class ProdutoService
 {
@@ -22,6 +23,19 @@ public class ProdutoService
     public async Task<IEnumerable<Produto>> GetByEmpresaIdAsync(int empresaId)
     {
         return await _repository.GetByEmpresaIdAsync(empresaId);
+    }
+
+    public async Task<SaldoEstoqueResponse> GetSaldoByEmpresaIdAsync(int empresaId)
+    {
+        var produtos = (await _repository.GetByEmpresaIdAsync(empresaId)).ToList();
+        return new SaldoEstoqueResponse
+        {
+            TotalProdutos = produtos.Count,
+            SaldoTotal = produtos.Sum(p => p.Saldo),
+            ProdutosBaixoEstoque = produtos.Count(p => p.Saldo > 0 && p.Saldo < 10),
+            ProdutosSemEstoque = produtos.Count(p => p.Saldo <= 0),
+            Produtos = produtos
+        };
     }
 
     public async Task<Produto?> GetByIdAsync(int id)

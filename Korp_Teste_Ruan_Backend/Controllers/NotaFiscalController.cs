@@ -40,6 +40,14 @@ public class NotaFiscalController : ControllerBase
         }
     }
 
+    // GET: api/notafiscal/empresa/1
+    [HttpGet("empresa/{empresaId:int}")]
+    public async Task<IActionResult> GetByEmpresa(int empresaId)
+    {
+        var notas = await _notaFiscalService.GetAllByEmpresaAsync(empresaId);
+        return Ok(notas);
+    }
+
     // GET: api/notafiscal/5
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetById(int id)

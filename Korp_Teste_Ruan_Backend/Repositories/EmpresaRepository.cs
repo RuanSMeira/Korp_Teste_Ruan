@@ -29,9 +29,10 @@ public class EmpresaRepository : IEmpresaRepository
 
     public async Task<Empresa?> GetByCnpjAsync(string cnpj)
     {
+        var cnpjNormalizado = new string(cnpj.Where(char.IsDigit).ToArray());
         return await _context.Empresas
             .AsNoTracking()
-            .FirstOrDefaultAsync(e => e.Cnpj == cnpj);
+            .FirstOrDefaultAsync(e => e.Cnpj == cnpjNormalizado);
     }
 
     public async Task<Empresa> AddAsync(Empresa empresa)

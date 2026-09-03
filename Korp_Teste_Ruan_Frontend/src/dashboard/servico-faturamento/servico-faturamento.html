@@ -16,7 +16,7 @@
         </div>
       </div>
       <div class="flex flex-col gap-2">
-        <span class="text-[#111827] text-2xl font-extrabold">1.847 NF-e</span>
+        <span class="text-[#111827] text-2xl font-extrabold">{{ notas().length }} NF-e</span>
         <div class="flex items-center gap-1">
           <svg class="w-[18px] h-[18px] text-[#10B981]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 7 7 17M7 7h10v10"/></svg>
           <span class="text-[#10B981] text-xs font-bold">+12.4%</span>
@@ -35,7 +35,7 @@
         </div>
       </div>
       <div class="flex flex-col gap-2">
-        <span class="text-[#111827] text-2xl font-extrabold">R$ 842.300,00</span>
+        <span class="text-[#111827] text-2xl font-extrabold">{{ notasFiltradas().length }} no período</span>
         <span class="text-[#9CA3AF] text-xs">Faturamento bruto acumulado</span>
       </div>
     </div>
@@ -50,8 +50,8 @@
         </div>
       </div>
       <div class="flex flex-col gap-2">
-        <span class="text-[#111827] text-2xl font-extrabold">14 Notas</span>
-        <span class="text-[#9CA3AF] text-xs">Aguardando SEFAZ</span>
+        <span class="text-[#111827] text-2xl font-extrabold">{{ notas().filter(n => n.status === 'Aberta').length }} Notas</span>
+        <span class="text-[#9CA3AF] text-xs">Aguardando emissão</span>
       </div>
     </div>
 
@@ -65,8 +65,8 @@
         </div>
       </div>
       <div class="flex flex-col gap-2">
-        <span class="text-[#111827] text-2xl font-extrabold">3 Notas</span>
-        <span class="text-[#9CA3AF] text-xs">Dentro das últimas 24h</span>
+        <span class="text-[#111827] text-2xl font-extrabold">{{ notas().filter(n => n.status === 'Fechada').length }} Notas</span>
+        <span class="text-[#9CA3AF] text-xs">Emitidas</span>
       </div>
     </div>
   </div>
@@ -85,33 +85,61 @@
         </button>
         <button
           type="button"
-          (click)="setFiltro('emitidas')"
+          (click)="setFiltro('fechadas')"
           class="px-4 py-2 rounded-lg text-[13px] font-bold transition-colors"
-          [class]="filtro() === 'emitidas' ? 'bg-[#E11A55] text-white' : 'bg-[#F8FAFC] text-[#4B5563]'"
+          [class]="filtro() === 'fechadas' ? 'bg-[#E11A55] text-white' : 'bg-[#F8FAFC] text-[#4B5563]'"
         >
-          Emitidas
+          Fechadas
         </button>
         <button
           type="button"
-          (click)="setFiltro('pendentes')"
+          (click)="setFiltro('abertas')"
           class="px-4 py-2 rounded-lg text-[13px] font-bold transition-colors"
-          [class]="filtro() === 'pendentes' ? 'bg-[#E11A55] text-white' : 'bg-[#F8FAFC] text-[#4B5563]'"
+          [class]="filtro() === 'abertas' ? 'bg-[#E11A55] text-white' : 'bg-[#F8FAFC] text-[#4B5563]'"
         >
-          Pendentes
-        </button>
-        <button
-          type="button"
-          (click)="setFiltro('canceladas')"
-          class="px-4 py-2 rounded-lg text-[13px] font-bold transition-colors"
-          [class]="filtro() === 'canceladas' ? 'bg-[#E11A55] text-white' : 'bg-[#F8FAFC] text-[#4B5563]'"
-        >
-          Canceladas
+          Abertas
         </button>
       </div>
-      <button type="button" class="px-5 py-2.5 bg-[#E11A55] rounded-lg text-white text-sm font-bold hover:bg-[#c81749] transition-colors">
-        Emitir Nova Nota
-      </button>
     </div>
+
+    @if (mensagem()) { <p class="text-sm font-semibold text-[#10B981]">{{ mensagem() }}</p> }
+    @if (erro()) {
+      <div class="flex items-center justify-between gap-4 rounded-lg bg-red-50 p-3 text-sm font-semibold text-[#EF4444]">
+        <span>{{ erro() }}</span>
+        <button type="button" (click)="carregar()" class="shrink-0 underline">Tentar novamente</button>
+      </div>
+    }
+
+    <form [formGroup]="form" (ngSubmit)="criarNota()" class="flex flex-wrap items-end gap-3 p-4 bg-[#F8FAFC] rounded-lg">
+      <label class="flex min-w-[220px] flex-1 flex-col gap-1 text-xs font-bold text-[#4B5563]">
+        Produto
+        <select formControlName="produtoId" class="rounded-lg border border-[#E5E7EB] bg-white px-3 py-2 text-sm font-normal text-[#111827]">
+          <option [ngValue]="0">Selecione um produto</option>
+          @for (produto of produtos(); track produto.produtoId) {
+            <option [ngValue]="produto.produtoId">{{ produto.codigo }} - {{ produto.descricao }} (saldo: {{ produto.saldo }})</option>
+          }
+        </select>
+      </label>
+      @if (perfil === 'empresa') {
+        <label class="flex min-w-[220px] flex-1 flex-col gap-1 text-xs font-bold text-[#4B5563]">
+          Usuário emissor
+          <select formControlName="usuarioEmissorId" class="rounded-lg border border-[#E5E7EB] bg-white px-3 py-2 text-sm font-normal text-[#111827]">
+            <option [ngValue]="0">Selecione o usuário</option>
+            @for (usuario of usuarios(); track usuario.usuarioId) {
+              <option [ngValue]="usuario.usuarioId">{{ usuario.nomeUsuario }} - {{ usuario.email }}</option>
+            }
+          </select>
+        </label>
+      }
+      <label class="w-32 flex flex-col gap-1 text-xs font-bold text-[#4B5563]">
+        Quantidade
+        <input formControlName="quantidade" type="number" min="1" class="rounded-lg border border-[#E5E7EB] bg-white px-3 py-2 text-sm font-normal text-[#111827]" />
+      </label>
+      <button type="submit" [disabled]="salvando()" class="px-5 py-2.5 rounded-lg bg-[#E11A55] text-sm font-bold text-white hover:bg-[#c81749] disabled:opacity-50">
+        {{ salvando() ? 'Criando...' : 'Criar nota' }}
+      </button>
+      @if (form.invalid && form.touched) { <p class="w-full text-xs font-semibold text-red-600">Selecione um produto e informe uma quantidade maior que zero.</p> }
+    </form>
 
     <div class="w-full overflow-x-auto">
       <table class="w-full text-left border-collapse">
@@ -125,16 +153,25 @@
           </tr>
         </thead>
         <tbody>
-          @for (n of notasFiltradas(); track n.numero) {
+          @if (carregando()) {
+            <tr><td colspan="5" class="p-6 text-center text-sm text-[#6B7280]">Carregando notas...</td></tr>
+          } @else if (notasFiltradas().length === 0) {
+            <tr><td colspan="5" class="p-6 text-center text-sm text-[#6B7280]">Nenhuma nota encontrada.</td></tr>
+          } @for (n of notasFiltradas(); track n.id) {
             <tr class="border-b border-[#E5E7EB] last:border-b-0">
-              <td class="p-3 text-[#111827] text-[13px] font-semibold whitespace-nowrap">{{ n.numero }}</td>
-              <td class="p-3 text-[#111827] text-[13px] whitespace-nowrap">{{ n.data }}</td>
-              <td class="p-3 text-[#111827] text-[13px]">{{ n.cliente }}</td>
-              <td class="p-3 text-[#111827] text-[13px] font-bold text-right whitespace-nowrap">{{ n.valor }}</td>
+              <td class="p-3 text-[#111827] text-[13px] font-semibold whitespace-nowrap">NF-e {{ n.numeroSequencial }}</td>
+              <td class="p-3 text-[#111827] text-[13px] whitespace-nowrap">{{ n.itens.length }} item(ns)</td>
+              <td class="p-3 text-[#111827] text-[13px]">Empresa {{ n.empresaId }}</td>
+              <td class="p-3 text-[#111827] text-[13px] font-bold text-right whitespace-nowrap">{{ n.itens.reduce(totalItens, 0) }} un</td>
               <td class="p-3 text-right whitespace-nowrap">
                 <span class="inline-block px-3 py-1 rounded text-xs font-bold" [class]="statusClasses(n.status)">
                   {{ n.status }}
                 </span>
+                @if (perfil === 'usuario' && n.status === 'Aberta') {
+                  <button type="button" (click)="emitir(n)" [disabled]="emitindoId() === n.id" class="ml-2 text-xs font-bold text-[#E11A55] disabled:opacity-50">
+                    {{ emitindoId() === n.id ? 'Emitindo...' : 'Emitir' }}
+                  </button>
+                }
               </td>
             </tr>
           }

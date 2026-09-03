@@ -52,6 +52,14 @@ public class NotaFiscalService : INotaFiscalService
 
         foreach (var itemReq in request.Itens)
         {
+            var produto = await _produtoRepository.GetByIdAsync(itemReq.ProdutoId);
+            if (produto is null || produto.EmpresaId != request.EmpresaId)
+                throw new ArgumentException($"O produto ID {itemReq.ProdutoId} não pertence à empresa informada.");
+
+            if (produto.Saldo < itemReq.Quantidade)
+                throw new InvalidOperationException(
+                    $"Saldo insuficiente para o produto '{produto.Descricao}'. Saldo atual: {produto.Saldo}, solicitado: {itemReq.Quantidade}.");
+
             var novoItem = new ItemNotaFiscal
             {
                 NotaFiscalId = nota.NotaFiscalId,
@@ -83,6 +91,26 @@ public class NotaFiscalService : INotaFiscalService
     public async Task<NotaFiscal?> GetByIdAsync(int id)
     {
         return await _notaFiscalRepository.GetByIdAsync(id);
+    }
+
+    public async Task<IEnumerable<NotaFiscalResponse>> GetAllByEmpresaAsync(int empresaId)
+    {
+        var notas = await _notaFiscalRepository.GetAllByEmpresaAsync(empresaId);
+
+        return notas.Select(n => new NotaFiscalResponse
+        {
+            Id = n.NotaFiscalId,
+            EmpresaId = n.EmpresaId,
+            UsuarioEmissorId = n.UsuarioEmissorId,
+            NumeroSequencial = n.NumeroSequencial,
+            Status = n.Status.ToString(),
+            Itens = n.Itens.Select(i => new ItemNotaFiscalResponse
+            {
+                Id = i.ItemId,
+                ProdutoId = i.ProdutoId,
+                Quantidade = i.QuantidadeProduto
+            }).ToList()
+        });
     }
 
     public async Task<NotaFiscalResponse> EmitirNotaAsync(int notaFiscalId)

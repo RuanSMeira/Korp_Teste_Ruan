@@ -22,6 +22,10 @@ public class EmpresaConfiguration : IEntityTypeConfiguration<Empresa>
             .IsRequired()
             .HasMaxLength(14);
 
+        builder.Property(e => e.SenhaMaster)
+            .IsRequired()
+            .HasMaxLength(500);
+
         builder.HasIndex(e => e.Cnpj)
             .IsUnique();
     }

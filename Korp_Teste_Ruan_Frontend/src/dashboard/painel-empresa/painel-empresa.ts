@@ -1,6 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { NgClass } from '@angular/common';
+import { RouterLink } from '@angular/router';
+import { forkJoin } from 'rxjs';
 import { HeaderComponent } from '../../core/header/header';
+import { SessaoService } from '../../app/core/api/sessao.service';
+import { ProdutoService } from '../../app/core/api/produto.service';
+import { NotaFiscalService } from '../../app/core/api/nota-fiscal.service';
+import { MovimentacaoEstoqueService } from '../../app/core/api/movimentacao-estoque.service';
+import { MovimentacaoEstoque } from '../../app/core/api/models';
 
 interface MetricCard {
   label: string;
@@ -15,8 +22,8 @@ interface MetricCard {
 
 interface DayBar {
   label: string;
-  nfe: number;
-  outros: number;
+  entradas: number;
+  saidas: number;
 }
 
 interface Activity {
@@ -30,91 +37,68 @@ interface Activity {
 @Component({
   selector: 'app-painel-empresa',
   standalone: true,
-  imports: [HeaderComponent, NgClass],
+  imports: [HeaderComponent, NgClass, RouterLink],
   templateUrl: './painel-empresa.html',
 })
-export class PainelEmpresaComponent {
-  metrics: MetricCard[] = [
-    {
-      label: 'Produtos Cadastrados',
-      value: '12.847',
-      trendValue: '+12%',
-      trendLabel: 'em relação ao mês anterior',
-      trendPositive: true,
-      iconBg: 'bg-[#E11A55]/[.08]',
-      iconColor: 'text-[#E11A55]',
-      icon: 'box',
-    },
-    {
-      label: 'Saldo Atual',
-      value: 'R$ 45.230,00',
-      trendValue: '+8.2%',
-      trendLabel: 'em relação ao mês anterior',
-      trendPositive: true,
-      iconBg: 'bg-[#10B981]/[.08]',
-      iconColor: 'text-[#10B981]',
-      icon: 'wallet',
-    },
-    {
-      label: 'Status de Estoque',
-      value: '98.4% Otimizado',
-      trendValue: '+1.5%',
-      trendLabel: 'em relação ao mês anterior',
-      trendPositive: true,
-      iconBg: 'bg-[#10B981]/[.08]',
-      iconColor: 'text-[#10B981]',
-      icon: 'database',
-    },
-    {
-      label: 'NF-e Pendentes',
-      value: '14 Notas',
-      trendValue: '-4%',
-      trendLabel: 'nos últimos 7 dias',
-      trendPositive: false,
-      iconBg: 'bg-[#F59E0B]/[.08]',
-      iconColor: 'text-[#F59E0B]',
-      icon: 'file-text',
-    },
-  ];
+export class PainelEmpresaComponent implements OnInit {
+  private readonly sessao = inject(SessaoService);
+  private readonly produtosService = inject(ProdutoService);
+  private readonly notasService = inject(NotaFiscalService);
+  private readonly movimentacoesService = inject(MovimentacaoEstoqueService);
+  metrics: MetricCard[] = [];
+  chartData: DayBar[] = [];
+  activities: Activity[] = [];
+  carregando = true;
+  erro = '';
 
-  chartData: DayBar[] = [
-    { label: 'Seg', nfe: 38, outros: 51 },
-    { label: 'Ter', nfe: 58, outros: 70 },
-    { label: 'Qua', nfe: 109, outros: 90 },
-    { label: 'Qui', nfe: 93, outros: 77 },
-    { label: 'Sex', nfe: 131, outros: 115 },
-    { label: 'Sáb', nfe: 48, outros: 38 },
-    { label: 'Dom', nfe: 29, outros: 26 },
-  ];
+  ngOnInit(): void {
+    const empresaId = this.sessao.obterEmpresaId();
+    if (!empresaId) {
+      this.carregando = false;
+      this.erro = 'Não foi possível identificar a empresa da sessão.';
+      return;
+    }
 
-  activities: Activity[] = [
-    {
-      label: 'Parafuso Sextavado M12',
-      sublabel: 'Cadastro de Produto',
-      meta: 'Cód: 8934',
-      time: 'Há 5 min',
-      dotColor: 'bg-[#10B981]',
-    },
-    {
-      label: 'Nota Fiscal de Saída - Filial PR',
-      sublabel: 'Faturamento Emitido',
-      meta: 'R$ 12.450,00',
-      time: 'Há 24 min',
-      dotColor: 'bg-[#10B981]',
-    },
-    {
-      label: 'Chapa de Aço Laminado',
-      sublabel: 'Atualização de Estoque',
-      meta: '+250 un',
-      time: 'Há 1 hora',
-      dotColor: 'bg-[#10B981]',
-    },
-    {
-      label: 'Nota Fiscal Consumidor - SP',
-      sublabel: 'Faturamento Pendente',
-      meta: 'R$ 1.890,00',
-      time: 'Há 2 horas',
-      dotColor: 'bg-[#F59E0B]',
-    },
-  ];
+    forkJoin({
+      produtos: this.produtosService.listarPorEmpresa(empresaId),
+      notas: this.notasService.listarPorEmpresa(empresaId),
+      movimentacoes: this.movimentacoesService.listarPorEmpresa(empresaId),
+    }).subscribe({
+      next: ({ produtos, notas, movimentacoes }) => {
+        const saldoTotal = produtos.reduce((total, produto) => total + produto.saldo, 0);
+        const produtosComSaldo = produtos.filter((produto) => produto.saldo > 0).length;
+        const estoqueOtimizado = produtos.length ? Math.round((produtosComSaldo / produtos.length) * 100) : 0;
+        const notasPendentes = notas.filter((nota) => nota.status.toLowerCase() !== 'emitida').length;
+        this.metrics = [
+          this.metric('Produtos Cadastrados', produtos.length.toLocaleString('pt-BR'), 'box', 'bg-[#E11A55]/[.08]', 'text-[#E11A55]'),
+          this.metric('Saldo Atual', `${saldoTotal.toLocaleString('pt-BR')} un`, 'wallet', 'bg-[#10B981]/[.08]', 'text-[#10B981]'),
+          this.metric('Status de Estoque', `${estoqueOtimizado}% com saldo`, 'database', 'bg-[#10B981]/[.08]', 'text-[#10B981]'),
+          this.metric('NF-e Pendentes', `${notasPendentes} notas`, 'file-text', 'bg-[#F59E0B]/[.08]', 'text-[#F59E0B]', notasPendentes === 0),
+        ];
+        this.chartData = this.criarGrafico(movimentacoes);
+        this.activities = movimentacoes.slice(0, 5).map((movimentacao) => ({
+          label: movimentacao.produto || `Produto ${movimentacao.produtoId}`,
+          sublabel: `${movimentacao.tipo} de estoque`,
+          meta: `${movimentacao.quantidade.toLocaleString('pt-BR')} un`,
+          time: new Date(movimentacao.dataMovimentacao).toLocaleDateString('pt-BR'),
+          dotColor: movimentacao.tipo.toLowerCase() === 'entrada' ? 'bg-[#10B981]' : 'bg-[#E11A55]',
+        }));
+        this.carregando = false;
+      },
+      error: (error: Error) => { this.erro = error.message; this.carregando = false; },
+    });
+  }
+
+  private metric(label: string, value: string, icon: MetricCard['icon'], iconBg: string, iconColor: string, positive = true): MetricCard {
+    return { label, value, trendValue: positive ? 'Atual' : 'Atenção', trendLabel: 'dados da empresa', trendPositive: positive, iconBg, iconColor, icon };
+  }
+
+  private criarGrafico(movimentacoes: MovimentacaoEstoque[]): DayBar[] {
+    const dias = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+    return dias.map((label, dia) => ({
+      label,
+      entradas: movimentacoes.filter((item) => new Date(item.dataMovimentacao).getDay() === dia && item.tipo.toLowerCase() === 'entrada').length,
+      saidas: movimentacoes.filter((item) => new Date(item.dataMovimentacao).getDay() === dia && item.tipo.toLowerCase() === 'saida').length,
+    }));
+  }
 }

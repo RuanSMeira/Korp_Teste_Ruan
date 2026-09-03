@@ -3,6 +3,7 @@ namespace Korp_Teste_Ruan_Backend.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Korp_Teste_Ruan_Backend.Models;
 using Korp_Teste_Ruan_Backend.Services;
+using Korp_Teste_Ruan_Backend.DTOs.Request;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -37,13 +38,20 @@ public class EmpresaController : ControllerBase
 
     // POST: api/empresas
     [HttpPost]
-    public async Task<ActionResult<Empresa>> Create([FromBody] Empresa empresa)
+    public async Task<ActionResult<Empresa>> Create([FromBody] CriarEmpresaRequest request)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
         try
         {
+            var empresa = new Empresa
+            {
+                RazaoSocial = request.RazaoSocial.Trim(),
+                NomeFantasia = request.NomeFantasia.Trim(),
+                Cnpj = new string(request.Cnpj.Where(char.IsDigit).ToArray()),
+                SenhaMaster = request.SenhaMaster
+            };
             var criada = await _service.CreateAsync(empresa);
             return CreatedAtAction(nameof(GetById), new { id = criada.EmpresaId }, criada);
         }
@@ -55,6 +63,25 @@ public class EmpresaController : ControllerBase
         {
             return Conflict(ex.Message);
         }
+    }
+
+    [HttpPost("login")]
+    public async Task<IActionResult> Login([FromBody] LoginEmpresaRequest request)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        var empresa = await _service.LoginAsync(request.Cnpj, request.Senha);
+        if (empresa is null)
+            return Unauthorized(new { erro = "CNPJ ou senha master inválidos." });
+
+        return Ok(new
+        {
+            empresaId = empresa.EmpresaId,
+            nomeFantasia = empresa.NomeFantasia,
+            cnpj = empresa.Cnpj,
+            perfil = "empresa"
+        });
     }
 
     // PUT: api/empresas/5
