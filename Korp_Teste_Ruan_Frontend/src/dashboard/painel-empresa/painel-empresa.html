@@ -1,0 +1,128 @@
+<div class="flex flex-col items-start gap-8 font-['Outfit']">
+  <app-header
+    title="Painel Corporativo"
+    subtitle="Seja bem-vindo de volta! Transforme dados em decisões ágeis no ecossistema KORP."
+  />
+
+  <!-- Cards de métricas -->
+  <div class="w-full flex items-start gap-4">
+    @for (m of metrics; track m.label) {
+      <div class="flex-1 p-6 bg-white rounded-2xl border border-[#E5E7EB] flex flex-col gap-4">
+        <div class="w-full flex justify-between items-center">
+          <span class="text-[#4B5563] text-[13px] font-semibold uppercase">{{ m.label }}</span>
+          <div class="p-2 rounded-lg" [ngClass]="m.iconBg">
+            <svg class="w-[18px] h-[18px]" [ngClass]="m.iconColor" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              @switch (m.icon) {
+                @case ('box') { <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5M12 22V12"/> }
+                @case ('wallet') { <path d="M21 12V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-1"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/> }
+                @case ('database') { <ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/> }
+                @case ('file-text') { <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2Z"/><path d="M14 2v6h6M9 13h6M9 17h6"/> }
+              }
+            </svg>
+          </div>
+        </div>
+        <div class="w-full flex flex-col gap-2">
+          <span class="text-[#111827] text-2xl font-extrabold">{{ m.value }}</span>
+          <div class="flex items-center gap-1">
+            <svg class="w-[18px] h-[18px]" [class]="m.trendPositive ? 'text-[#10B981]' : 'text-[#E11A55]'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              @if (m.trendPositive) { <path d="M17 7 7 17M7 7h10v10"/> } @else { <path d="M7 7l10 10M17 7v10H7"/> }
+            </svg>
+            <span class="text-xs font-bold" [class]="m.trendPositive ? 'text-[#10B981]' : 'text-[#E11A55]'">{{ m.trendValue }}</span>
+            <span class="text-[#9CA3AF] text-xs">{{ m.trendLabel }}</span>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- Bento: gráfico + atividades -->
+  <div class="w-full flex items-start gap-6">
+    <!-- Gráfico -->
+    <div class="flex-1 p-8 bg-white rounded-[20px] border border-[#E5E7EB] flex flex-col gap-6">
+      <div class="w-full flex flex-col gap-1">
+        <h2 class="text-[#111827] text-lg font-extrabold">Volume de Notas Fiscais</h2>
+        <p class="text-[#4B5563] text-xs">Demonstrativo de emissão semanal por filiais</p>
+      </div>
+
+      <div class="w-full h-[220px] pt-5 pb-2.5 flex items-end gap-5">
+        <div class="self-stretch flex flex-col justify-between items-start text-[#9CA3AF] text-[11px]">
+          <span>500</span>
+          <span>250</span>
+          <span>0</span>
+        </div>
+        <div class="flex-1 self-stretch flex justify-between items-end">
+          @for (d of chartData; track d.label) {
+            <div class="flex flex-col items-center gap-2">
+              <div class="flex items-end gap-1">
+                <div class="w-3 bg-[#E11A55] rounded-t" [style.height.px]="d.nfe"></div>
+                <div class="w-3 bg-[#1A1F35] rounded-t" [style.height.px]="d.outros"></div>
+              </div>
+              <span class="text-[#4B5563] text-xs">{{ d.label }}</span>
+            </div>
+          }
+        </div>
+      </div>
+
+      <div class="w-full flex justify-between items-center">
+        <span class="text-[#9CA3AF] text-xs">Dados sincronizados em tempo real com a SEFAZ.</span>
+        <button type="button" class="px-4 py-2.5 bg-[#E11A55] rounded-lg text-white text-[13px] font-bold hover:bg-[#c81749] transition-colors">
+          Emitir Nova Nota
+        </button>
+      </div>
+    </div>
+
+    <!-- Atividades recentes -->
+    <div class="flex-1 p-8 bg-white rounded-[20px] border border-[#E5E7EB] flex flex-col gap-4">
+      <div class="w-full pb-2 flex justify-between items-center">
+        <div class="flex flex-col gap-1">
+          <h2 class="text-[#111827] text-lg font-extrabold">Atividades Recentes</h2>
+          <p class="text-[#4B5563] text-xs">Registro de ações executadas no ERP</p>
+        </div>
+        <div class="p-2 bg-[#F8FAFC] rounded-lg">
+          <svg class="w-[18px] h-[18px] text-[#10B981]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m22 4-10 10-3-3"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="w-full flex flex-col">
+        @for (a of activities; track a.label) {
+          <div class="w-full py-3.5 px-4 border-b border-[#E5E7EB] flex justify-between items-center last:border-b-0">
+            <div class="flex items-center gap-3 min-w-0">
+              <span class="w-2 h-2 rounded-full shrink-0" [ngClass]="a.dotColor"></span>
+              <div class="flex flex-col gap-0.5 min-w-0">
+                <p class="text-[#111827] text-sm font-semibold truncate">{{ a.label }}</p>
+                <p class="text-[#9CA3AF] text-xs truncate">{{ a.sublabel }}</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-6 shrink-0">
+              <span class="text-[#111827] text-sm font-bold">{{ a.meta }}</span>
+              <span class="text-[#9CA3AF] text-xs">{{ a.time }}</span>
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="w-full pt-3 flex justify-center">
+        <button type="button" class="text-[#E11A55] text-[13px] font-bold hover:underline">
+          Ver todo o histórico de atividades
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FAB do agente virtual -->
+<div class="fixed bottom-10 right-10 flex flex-col items-end gap-3">
+  <div class="px-2.5 py-1.5 bg-white shadow-md rounded-full border border-[#E5E7EB] flex items-center gap-1.5">
+    <svg class="w-3.5 h-3.5 text-[#E11A55]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="m12 3-1.9 4.6L5.5 9.5l4.6 1.9L12 16l1.9-4.6 4.6-1.9-4.6-1.9L12 3Z"/>
+    </svg>
+    <span class="text-[#4B5563] text-xs font-semibold">Agente Virtual</span>
+  </div>
+  <button type="button" class="w-16 h-16 bg-[#E11A55] shadow-xl rounded-full flex items-center justify-center hover:bg-[#c81749] transition-colors">
+    <svg class="w-7 h-7 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5Z"/>
+    </svg>
+  </button>
+</div>

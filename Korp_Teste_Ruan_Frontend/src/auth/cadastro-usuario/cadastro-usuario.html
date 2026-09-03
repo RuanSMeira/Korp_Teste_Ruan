@@ -1,0 +1,43 @@
+<div class="flex flex-col gap-2 mb-8">
+  <h2 class="text-[#111827] text-[28px] font-extrabold tracking-tight">Crie sua conta de usuário</h2>
+  <p class="text-[#4B5563] text-[15px]">Preencha os campos abaixo para iniciar seu cadastro na plataforma.</p>
+</div>
+
+<form [formGroup]="cadastroForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-5">
+  <!-- Nome -->
+  <div class="flex flex-col gap-2">
+    <label class="text-[#111827] text-sm font-semibold">Nome Completo</label>
+    <input type="text" formControlName="nome" placeholder="Ex: João da Silva" 
+      class="h-12 px-4 bg-[#F8FAFC] border border-[#E5E7EB] rounded-lg text-[15px] focus:outline-none focus:border-[#E11A55] transition-all" />
+  </div>
+
+  <!-- E-mail -->
+  <div class="flex flex-col gap-2">
+    <label class="text-[#111827] text-sm font-semibold">E-mail</label>
+    <input type="email" formControlName="email" placeholder="exemplo@empresa.com.br" 
+      class="h-12 px-4 bg-[#F8FAFC] border border-[#E5E7EB] rounded-lg text-[15px] focus:outline-none focus:border-[#E11A55] transition-all" />
+  </div>
+
+  <!-- Senha -->
+  <div class="flex flex-col gap-2">
+    <label class="text-[#111827] text-sm font-semibold">Senha de Acesso</label>
+    <input type="password" formControlName="senha" placeholder="Crie uma senha forte" 
+      class="h-12 px-4 w-full bg-[#F8FAFC] border border-[#E5E7EB] rounded-lg text-[15px] focus:outline-none focus:border-[#E11A55] transition-all" />
+  </div>
+
+  <!-- Confirmar Senha -->
+  <div class="flex flex-col gap-2">
+    <label class="text-[#111827] text-sm font-semibold">Confirmar Senha</label>
+    <input type="password" formControlName="confirmarSenha" placeholder="Repita a senha criada" 
+      class="h-12 px-4 w-full bg-[#F8FAFC] border border-[#E5E7EB] rounded-lg text-[15px] focus:outline-none focus:border-[#E11A55] transition-all" />
+  </div>
+
+  <button type="submit" class="w-full bg-[#E11A55] text-white py-3.5 rounded-lg font-bold mt-2 hover:bg-rose-700 transition-colors shadow-md">
+    Criar Minha Conta
+  </button>
+</form>
+
+<div class="flex justify-center items-center gap-1.5 mt-6">
+  <span class="text-[#4B5563] text-sm">Já possui uma conta?</span>
+  <a routerLink="/auth/usuario" class="text-[#E11A55] text-sm font-bold hover:underline cursor-pointer">Faça login</a>
+</div>

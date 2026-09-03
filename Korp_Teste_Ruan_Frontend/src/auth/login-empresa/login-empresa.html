@@ -1,0 +1,41 @@
+<div class="flex flex-col gap-2 mb-8">
+  <h2 class="text-[#111827] text-[28px] font-extrabold tracking-tight">Acesso Corporativo</h2>
+  <p class="text-[#4B5563] text-[15px]">Insira o CNPJ e a senha master para acessar o painel de gestão da sua empresa.</p>
+</div>
+
+<form [formGroup]="loginEmpresaForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-5">
+  
+  <div class="flex flex-col gap-2">
+    <label class="text-[#111827] text-sm font-semibold">CNPJ da Empresa</label>
+    <input type="text" formControlName="cnpj" placeholder="00.000.000/0000-00" 
+      class="h-12 px-4 bg-[#F8FAFC] border border-[#E5E7EB] rounded-lg text-[15px] focus:outline-none focus:border-[#E11A55] transition-all" />
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <label class="text-[#111827] text-sm font-semibold">Senha Master</label>
+    <div class="relative w-full">
+      <input type="password" formControlName="senha" placeholder="••••••••" 
+        class="h-12 px-4 w-full bg-[#F8FAFC] border border-[#E5E7EB] rounded-lg text-[15px] focus:outline-none focus:border-[#E11A55] transition-all" />
+      
+      <button type="button" class="absolute right-4 top-1/2 -translate-y-1/2 text-[#4B5563] hover:text-[#111827] transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="flex justify-end">
+    <a href="#" class="text-[#E11A55] text-sm font-semibold hover:underline">Esqueci a senha da empresa</a>
+  </div>
+
+  <button type="submit" class="w-full bg-[#111827] text-white py-3.5 rounded-lg font-bold shadow-md hover:bg-gray-800 transition-colors mt-2">
+    Acessar Painel
+  </button>
+</form>
+
+<div class="flex justify-center items-center gap-1.5 mt-6">
+  <span class="text-[#4B5563] text-sm">Empresa ainda não cadastrada?</span>
+  <!-- Link direcionando para o cadastro correto -->
+  <a routerLink="/auth/cadastro-empresa" class="text-[#E11A55] text-sm font-bold hover:underline cursor-pointer">Cadastrar agora</a>
+</div>

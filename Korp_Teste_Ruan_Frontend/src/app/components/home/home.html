@@ -1,0 +1,114 @@
+<div class="min-h-screen bg-[#F0F2F5] font-['Outfit'] flex flex-col">
+  
+  <header class="bg-[#101423] w-full h-[89px] flex items-center justify-between px-8 lg:px-[120px]">
+  
+  <div class="flex items-center">
+    <!-- Adicionamos a tag <a> com routerLink -->
+    <a routerLink="/" class="cursor-pointer">
+      <img src="/assets/Logo_Korp.webp" alt="Logo KORP ERP by Viasoft" class="h-10 object-contain" />
+    </a>
+  </div>
+
+  <nav class="hidden md:flex gap-12">
+  <a routerLink="/auth/usuario" class="text-white text-[22px] font-extrabold hover:text-[#E11A55] transition-colors cursor-pointer">
+    acesso usuário
+  </a>
+  <a routerLink="/auth/empresa" class="text-white text-[22px] font-extrabold hover:text-[#E11A55] transition-colors cursor-pointer">
+    acesso empresa
+  </a>
+</nav>
+</header>
+
+  <main class="flex-1 flex flex-col lg:flex-row items-center justify-center gap-16 px-8 lg:px-[120px] py-16 max-w-[1600px] mx-auto w-full">
+    
+    <div class="flex flex-col items-start gap-7 max-w-[480px]">
+      <h1 class="text-[#101423] text-5xl lg:text-[72px] font-black leading-[1.1]">
+        EMISSÃO NOTA<br>FISCAL
+      </h1>
+      
+      <div class="flex flex-col gap-4 text-[#4B5563] text-[15px] font-normal leading-relaxed">
+        <p>Simplifique o seu faturamento com um sistema projetado para agilidade. Emita suas Notas Fiscais Eletrônicas (NF-e) em poucos cliques, com cálculos automáticos de tributos e validação em tempo real.</p>
+        <p>Automatize o envio de XML/PDF para os clientes e mantenha sua operação fiscal 100% em conformidade e sem dores de cabeça.</p>
+      </div>
+    </div>
+
+    <div class="w-full max-w-[648px] bg-white rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.09)] overflow-hidden flex flex-col border border-gray-100 select-none">
+      
+      <div class="bg-[#F3F4F6] px-4 py-3 flex justify-between items-center">
+        <div class="flex gap-1.5">
+          <div class="w-2.5 h-2.5 bg-[#F87171] rounded-full"></div>
+          <div class="w-2.5 h-2.5 bg-[#FCD34D] rounded-full"></div>
+          <div class="w-2.5 h-2.5 bg-[#34D399] rounded-full"></div>
+        </div>
+        <div class="w-[300px] bg-[#E5E7EB] rounded-md py-1 px-4 flex justify-center">
+          <span class="text-[#9CA3AF] text-[11px]">korp.com.br/emissao-nfe</span>
+        </div>
+        <div class="w-10"></div> 
+      </div>
+
+      <div class="p-5 bg-[#F8FAFC] flex flex-col gap-4">
+        
+        <div class="flex justify-between items-center">
+          <div class="flex items-center gap-2">
+            <h2 class="text-[#101423] text-sm font-extrabold">Nova NF-e (Saída)</h2>
+            <span class="bg-blue-100 text-blue-700 text-[9px] px-2 py-0.5 rounded font-bold uppercase">Série 1</span>
+          </div>
+          <span class="bg-emerald-100 text-emerald-700 text-[10px] px-2.5 py-1 rounded-md font-bold flex items-center gap-1">
+            <div class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></div>
+            SEFAZ Online
+          </span>
+        </div>
+
+        <div class="bg-white p-3.5 rounded-xl border border-[#E5E7EB] flex flex-col gap-3">
+          <h3 class="text-[#6B7280] text-[9px] font-bold uppercase tracking-wider">Dados do Destinatário</h3>
+          <div class="grid grid-cols-3 gap-2">
+            <div class="col-span-1 bg-[#F3F4F6] p-2 rounded border border-gray-200">
+              <span class="block text-gray-400 text-[8px] uppercase">CNPJ</span>
+              <span class="block text-gray-700 text-[10px] font-semibold mt-0.5">12.345.678/0001-90</span>
+            </div>
+            <div class="col-span-2 bg-[#F3F4F6] p-2 rounded border border-gray-200">
+              <span class="block text-gray-400 text-[8px] uppercase">Razão Social</span>
+              <span class="block text-gray-700 text-[10px] font-semibold mt-0.5">Indústria Metalúrgica Exemplo LTDA</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white p-3.5 rounded-xl border border-[#E5E7EB] flex flex-col">
+          <h3 class="text-[#6B7280] text-[9px] font-bold uppercase tracking-wider mb-2">Itens da Nota</h3>
+          
+          <div class="flex justify-between border-b border-[#E5E7EB] pb-1 mb-1">
+            <span class="text-[#9CA3AF] text-[8px] font-semibold uppercase w-1/2">Descrição</span>
+            <span class="text-[#9CA3AF] text-[8px] font-semibold uppercase w-1/6 text-center">NCM</span>
+            <span class="text-[#9CA3AF] text-[8px] font-semibold uppercase w-1/6 text-center">Qtd</span>
+            <span class="text-[#9CA3AF] text-[8px] font-semibold uppercase w-1/6 text-right">Vlr Total</span>
+          </div>
+          
+          <div class="flex justify-between border-b border-[#E5E7EB] py-1.5">
+            <span class="text-[#374151] text-[9px] font-semibold w-1/2 truncate">Chapa de Aço Carbono 1020</span>
+            <span class="text-[#6B7280] text-[9px] w-1/6 text-center">7208.51.00</span>
+            <span class="text-[#374151] text-[9px] w-1/6 text-center">15 un</span>
+            <span class="text-[#101423] text-[9px] font-bold w-1/6 text-right">R$ 4.500,00</span>
+          </div>
+          <div class="flex justify-between py-1.5">
+            <span class="text-[#374151] text-[9px] font-semibold w-1/2 truncate">Tubo Industrial Redondo</span>
+            <span class="text-[#6B7280] text-[9px] w-1/6 text-center">7306.30.00</span>
+            <span class="text-[#374151] text-[9px] w-1/6 text-center">50 un</span>
+            <span class="text-[#101423] text-[9px] font-bold w-1/6 text-right">R$ 2.100,00</span>
+          </div>
+        </div>
+
+        <div class="flex justify-between items-center mt-2">
+          <div class="flex flex-col">
+            <span class="text-gray-500 text-[9px] font-semibold uppercase">Total da Nota</span>
+            <span class="text-[#101423] text-lg font-black">R$ 6.600,00</span>
+          </div>
+          <!-- Falso botão transformado em div estática -->
+          <div class="bg-[#10B981] text-white px-5 py-2.5 rounded-lg text-[11px] font-extrabold shadow-md shadow-emerald-500/20 flex items-center gap-2 cursor-default">
+            Transmitir NF-e
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+</div>

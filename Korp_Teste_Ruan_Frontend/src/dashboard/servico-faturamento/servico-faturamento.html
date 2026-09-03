@@ -1,0 +1,145 @@
+<div class="flex flex-col items-start gap-8 font-['Outfit']">
+  <app-header
+    title="Serviço de Faturamento"
+    subtitle="Gerenciamento de emissões fiscais, cancelamentos e faturamentos homologados."
+  />
+
+  <!-- Cards resumo -->
+  <div class="w-full flex items-start gap-4">
+    <div class="flex-1 p-6 bg-white rounded-2xl border border-[#E5E7EB] flex flex-col gap-4">
+      <div class="w-full flex justify-between items-center">
+        <span class="text-[#4B5563] text-[13px] font-semibold uppercase">Notas Emitidas (Mês)</span>
+        <div class="p-2 bg-[#10B981]/[.08] rounded-lg">
+          <svg class="w-[18px] h-[18px] text-[#10B981]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2Z"/><path d="M14 2v6h6M9 13h6M9 17h6"/>
+          </svg>
+        </div>
+      </div>
+      <div class="flex flex-col gap-2">
+        <span class="text-[#111827] text-2xl font-extrabold">1.847 NF-e</span>
+        <div class="flex items-center gap-1">
+          <svg class="w-[18px] h-[18px] text-[#10B981]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 7 7 17M7 7h10v10"/></svg>
+          <span class="text-[#10B981] text-xs font-bold">+12.4%</span>
+          <span class="text-[#9CA3AF] text-xs">vs mês anterior</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex-1 p-6 bg-white rounded-2xl border border-[#E5E7EB] flex flex-col gap-4">
+      <div class="w-full flex justify-between items-center">
+        <span class="text-[#4B5563] text-[13px] font-semibold uppercase">Valor Total Faturado</span>
+        <div class="p-2 bg-[#101423]/[.08] rounded-lg">
+          <svg class="w-[18px] h-[18px] text-[#101423]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+          </svg>
+        </div>
+      </div>
+      <div class="flex flex-col gap-2">
+        <span class="text-[#111827] text-2xl font-extrabold">R$ 842.300,00</span>
+        <span class="text-[#9CA3AF] text-xs">Faturamento bruto acumulado</span>
+      </div>
+    </div>
+
+    <div class="flex-1 p-6 bg-white rounded-2xl border border-[#E5E7EB] flex flex-col gap-4">
+      <div class="w-full flex justify-between items-center">
+        <span class="text-[#4B5563] text-[13px] font-semibold uppercase">Notas Pendentes</span>
+        <div class="p-2 bg-[#F59E0B]/[.08] rounded-lg">
+          <svg class="w-[18px] h-[18px] text-[#F59E0B]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+          </svg>
+        </div>
+      </div>
+      <div class="flex flex-col gap-2">
+        <span class="text-[#111827] text-2xl font-extrabold">14 Notas</span>
+        <span class="text-[#9CA3AF] text-xs">Aguardando SEFAZ</span>
+      </div>
+    </div>
+
+    <div class="flex-1 p-6 bg-white rounded-2xl border border-[#E5E7EB] flex flex-col gap-4">
+      <div class="w-full flex justify-between items-center">
+        <span class="text-[#4B5563] text-[13px] font-semibold uppercase">Notas Canceladas</span>
+        <div class="p-2 bg-[#EF4444]/[.08] rounded-lg">
+          <svg class="w-[18px] h-[18px] text-[#EF4444]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2Z"/><path d="M14 2v6h6M9.5 12.5l5 5M14.5 12.5l-5 5"/>
+          </svg>
+        </div>
+      </div>
+      <div class="flex flex-col gap-2">
+        <span class="text-[#111827] text-2xl font-extrabold">3 Notas</span>
+        <span class="text-[#9CA3AF] text-xs">Dentro das últimas 24h</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabela de notas -->
+  <div class="w-full p-6 bg-white rounded-2xl border border-[#E5E7EB] flex flex-col gap-5">
+    <div class="w-full flex justify-between items-center">
+      <div class="flex items-start gap-2">
+        <button
+          type="button"
+          (click)="setFiltro('todas')"
+          class="px-4 py-2 rounded-lg text-[13px] font-bold transition-colors"
+          [class]="filtro() === 'todas' ? 'bg-[#E11A55] text-white' : 'bg-[#F8FAFC] text-[#4B5563]'"
+        >
+          Todas
+        </button>
+        <button
+          type="button"
+          (click)="setFiltro('emitidas')"
+          class="px-4 py-2 rounded-lg text-[13px] font-bold transition-colors"
+          [class]="filtro() === 'emitidas' ? 'bg-[#E11A55] text-white' : 'bg-[#F8FAFC] text-[#4B5563]'"
+        >
+          Emitidas
+        </button>
+        <button
+          type="button"
+          (click)="setFiltro('pendentes')"
+          class="px-4 py-2 rounded-lg text-[13px] font-bold transition-colors"
+          [class]="filtro() === 'pendentes' ? 'bg-[#E11A55] text-white' : 'bg-[#F8FAFC] text-[#4B5563]'"
+        >
+          Pendentes
+        </button>
+        <button
+          type="button"
+          (click)="setFiltro('canceladas')"
+          class="px-4 py-2 rounded-lg text-[13px] font-bold transition-colors"
+          [class]="filtro() === 'canceladas' ? 'bg-[#E11A55] text-white' : 'bg-[#F8FAFC] text-[#4B5563]'"
+        >
+          Canceladas
+        </button>
+      </div>
+      <button type="button" class="px-5 py-2.5 bg-[#E11A55] rounded-lg text-white text-sm font-bold hover:bg-[#c81749] transition-colors">
+        Emitir Nova Nota
+      </button>
+    </div>
+
+    <div class="w-full overflow-x-auto">
+      <table class="w-full text-left border-collapse">
+        <thead>
+          <tr class="bg-[#F8FAFC]">
+            <th class="p-3 text-[#4B5563] text-xs font-bold whitespace-nowrap">Nº NOTA</th>
+            <th class="p-3 text-[#4B5563] text-xs font-bold whitespace-nowrap">DATA EMISSÃO</th>
+            <th class="p-3 text-[#4B5563] text-xs font-bold whitespace-nowrap">CLIENTE</th>
+            <th class="p-3 text-[#4B5563] text-xs font-bold text-right whitespace-nowrap">VALOR</th>
+            <th class="p-3 text-[#4B5563] text-xs font-bold text-right whitespace-nowrap">STATUS</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (n of notasFiltradas(); track n.numero) {
+            <tr class="border-b border-[#E5E7EB] last:border-b-0">
+              <td class="p-3 text-[#111827] text-[13px] font-semibold whitespace-nowrap">{{ n.numero }}</td>
+              <td class="p-3 text-[#111827] text-[13px] whitespace-nowrap">{{ n.data }}</td>
+              <td class="p-3 text-[#111827] text-[13px]">{{ n.cliente }}</td>
+              <td class="p-3 text-[#111827] text-[13px] font-bold text-right whitespace-nowrap">{{ n.valor }}</td>
+              <td class="p-3 text-right whitespace-nowrap">
+                <span class="inline-block px-3 py-1 rounded text-xs font-bold" [class]="statusClasses(n.status)">
+                  {{ n.status }}
+                </span>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

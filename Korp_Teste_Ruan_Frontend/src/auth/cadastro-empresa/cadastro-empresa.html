@@ -1,0 +1,51 @@
+<div class="flex flex-col gap-2 mb-8">
+  <h2 class="text-[#111827] text-[28px] font-extrabold tracking-tight">Cadastre sua Empresa</h2>
+  <p class="text-[#4B5563] text-[15px]">Precisamos de alguns detalhes sobre o seu negócio para personalizar seu ambiente Korp.</p>
+</div>
+
+<form [formGroup]="empresaForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-4">
+  
+  <div class="flex flex-col gap-2">
+    <label class="text-[#111827] text-sm font-semibold">Razão Social</label>
+    <input type="text" formControlName="razaoSocial" placeholder="Insira o nome da sua empresa" 
+      class="h-12 px-4 bg-[#F8FAFC] border border-[#E5E7EB] rounded-lg text-[15px] focus:outline-none focus:border-[#E11A55] transition-all" />
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <label class="text-[#111827] text-sm font-semibold">CNPJ</label>
+    <input type="text" formControlName="cnpj" placeholder="00.000.000/0000-00" 
+      class="h-12 px-4 bg-[#F8FAFC] border border-[#E5E7EB] rounded-lg text-[15px] focus:outline-none focus:border-[#E11A55] transition-all" />
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <label class="text-[#111827] text-sm font-semibold">E-mail de Contato</label>
+    <input type="email" formControlName="email" placeholder="faturamento@empresa.com.br" 
+      class="h-12 px-4 bg-[#F8FAFC] border border-[#E5E7EB] rounded-lg text-[15px] focus:outline-none focus:border-[#E11A55] transition-all" />
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <label class="text-[#111827] text-sm font-semibold">Telefone Comercial</label>
+    <input type="text" formControlName="telefone" placeholder="(00) 00000-0000" 
+      class="h-12 px-4 bg-[#F8FAFC] border border-[#E5E7EB] rounded-lg text-[15px] focus:outline-none focus:border-[#E11A55] transition-all" />
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <label class="text-[#111827] text-sm font-semibold">Setor de Atuação</label>
+    <select formControlName="setor" 
+      class="h-12 px-4 bg-[#F8FAFC] border border-[#E5E7EB] rounded-lg text-[15px] text-[#4B5563] focus:outline-none focus:border-[#E11A55] transition-all">
+      <option value="" disabled selected>Selecione o segmento principal</option>
+      <option value="industria">Indústria</option>
+      <option value="logistica">Logística</option>
+      <option value="varejo">Varejo</option>
+    </select>
+  </div>
+
+  <button type="submit" class="w-full bg-[#E11A55] text-white py-3.5 rounded-lg font-bold mt-4 hover:bg-rose-700 transition-colors shadow-md">
+    Cadastrar Empresa
+  </button>
+</form>
+
+<div class="flex justify-center items-center gap-1.5 mt-6">
+  <span class="text-[#4B5563] text-sm">Dúvidas sobre o cadastro?</span>
+  <a href="#" class="text-[#E11A55] text-sm font-bold hover:underline">Suporte</a>
+</div>

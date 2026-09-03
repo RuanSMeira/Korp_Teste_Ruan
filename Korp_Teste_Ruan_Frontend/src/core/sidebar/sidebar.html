@@ -1,0 +1,99 @@
+<aside
+  class="w-[280px] shrink-0 self-stretch flex flex-col justify-between items-start p-8 bg-[#101423] border-r border-[#2E3B5E] font-['Outfit']"
+>
+  <!-- Topo: logo + navegação -->
+  <div class="w-full flex flex-col items-start gap-12">
+    <!-- Logo -->
+    <div class="w-full flex items-center gap-2.5">
+      <div class="w-9 h-8 bg-[#E11A55] rounded-md flex items-center justify-center">
+        <span class="text-white text-xl font-extrabold">K</span>
+      </div>
+      <div class="flex flex-col items-start gap-0.5">
+        <div class="flex items-baseline gap-1">
+          <span class="text-white text-[22px] font-extrabold">KORP</span>
+          <span class="text-[#E11A55] text-sm font-semibold">ERP</span>
+        </div>
+        <span class="text-[#9CA3AF] text-[9px] font-semibold uppercase tracking-wide">by Viasoft</span>
+      </div>
+    </div>
+
+    <!-- Navegação -->
+    <nav class="w-full flex flex-col items-start gap-2">
+      <span class="text-[#9CA3AF] text-[11px] font-bold uppercase tracking-wide">Navegação Principal</span>
+
+      @for (item of navItems; track item.path) {
+        <a
+          [routerLink]="item.path"
+          routerLinkActive="bg-[#E11A55]"
+          #rla="routerLinkActive"
+          class="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors hover:bg-white/5"
+        >
+          <span class="w-[18px] h-[18px] shrink-0" [class]="rla.isActive ? 'text-white' : 'text-[#9CA3AF]'">
+            @switch (item.icon) {
+              @case ('box') {
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/>
+                  <path d="m3.3 7 8.7 5 8.7-5M12 22V12"/>
+                </svg>
+              }
+              @case ('wallet') {
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 12V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-1"/>
+                  <path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/>
+                </svg>
+              }
+              @case ('database') {
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <ellipse cx="12" cy="5" rx="9" ry="3"/>
+                  <path d="M3 5v14a9 3 0 0 0 18 0V5"/>
+                  <path d="M3 12a9 3 0 0 0 18 0"/>
+                </svg>
+              }
+              @case ('file-text') {
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2Z"/>
+                  <path d="M14 2v6h6M9 13h6M9 17h6"/>
+                </svg>
+              }
+            }
+          </span>
+          <p
+            class="flex-1 text-sm text-white truncate"
+            [class.font-bold]="rla.isActive"
+            [class.font-medium]="!rla.isActive"
+          >
+            {{ item.label }}
+          </p>
+          @if (rla.isActive) {
+            <span class="w-1 h-4 bg-white rounded-full"></span>
+          }
+        </a>
+      }
+    </nav>
+  </div>
+
+  <!-- Rodapé: empresa + logout -->
+  <div class="w-full flex flex-col items-start gap-5">
+    <div class="w-full h-px bg-[#2E3B5E]"></div>
+
+    <div class="w-full flex items-center gap-3 p-2 bg-[#1A1F35] rounded-xl">
+      <div class="w-10 h-10 bg-[#E11A55] rounded-lg flex items-center justify-center shrink-0">
+        <span class="text-white text-lg font-extrabold">V</span>
+      </div>
+      <div class="flex-1 flex flex-col items-start gap-0.5 min-w-0">
+        <p class="w-full text-white text-sm font-bold truncate">Viasoft Matriz</p>
+        <p class="w-full text-[#9CA3AF] text-[11px] truncate">CNPJ: 00.000.000/0001-00</p>
+      </div>
+    </div>
+
+    <button
+      type="button"
+      class="w-full flex items-center gap-3 pl-4 text-[#9CA3AF] hover:text-white transition-colors"
+    >
+      <svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>
+      </svg>
+      <span class="text-sm font-semibold">Sair do Sistema</span>
+    </button>
+  </div>
+</aside>
