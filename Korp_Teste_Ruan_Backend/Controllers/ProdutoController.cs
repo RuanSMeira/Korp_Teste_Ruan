@@ -1,8 +1,9 @@
 namespace Korp_Teste_Ruan_Backend.Controllers;
 
-using Microsoft.AspNetCore.Mvc;
+using Korp_Teste_Ruan_Backend.DTOs.Request;
 using Korp_Teste_Ruan_Backend.Models;
 using Korp_Teste_Ruan_Backend.Services;
+using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -45,13 +46,22 @@ public class ProdutosController : ControllerBase
 
     // POST: api/produtos
     [HttpPost]
-    public async Task<ActionResult<Produto>> Create([FromBody] Produto produto)
+    public async Task<ActionResult<Produto>> Create([FromBody] CriarProdutoRequest request)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
         try
         {
+            // Mapeando os dados do DTO para a entidade Produto
+            var produto = new Produto
+            {
+                EmpresaId = request.EmpresaId, // Linha adicionada
+                Codigo = request.Codigo,
+                Descricao = request.Descricao,
+                Saldo = request.SaldoInicial // (ou Saldo, conforme nomeado na sua entidade)
+            };
+
             var criado = await _service.CreateAsync(produto);
             return CreatedAtAction(nameof(GetById), new { id = criado.ProdutoId }, criado);
         }

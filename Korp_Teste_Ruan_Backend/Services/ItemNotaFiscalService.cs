@@ -2,63 +2,39 @@ namespace Korp_Teste_Ruan_Backend.Services;
 
 using Korp_Teste_Ruan_Backend.Models;
 using Korp_Teste_Ruan_Backend.Repositories;
+using Korp_Teste_Ruan_Backend.Services.Interfaces;
 
-public class ItemNotaFiscalService
+public class ItemNotaFiscalService : IItemNotaFiscalService
 {
-    private readonly IItemNotaFiscalRepository _repository;
+    private readonly IItemNotaFiscalRepository _itemRepository;
+    private readonly IProdutoRepository _produtoRepository;
 
-    public ItemNotaFiscalService(IItemNotaFiscalRepository repository)
+    public ItemNotaFiscalService(
+        IItemNotaFiscalRepository itemRepository,
+        IProdutoRepository produtoRepository)
     {
-        _repository = repository;
-    }
-
-    public async Task<IEnumerable<ItemNotaFiscal>> GetAllAsync()
-    {
-        return await _repository.GetAllAsync();
-    }
-
-    public async Task<IEnumerable<ItemNotaFiscal>> GetByNotaFiscalIdAsync(int notaFiscalId)
-    {
-        return await _repository.GetByNotaFiscalIdAsync(notaFiscalId);
-    }
-
-    public async Task<ItemNotaFiscal?> GetByIdAsync(int id)
-    {
-        return await _repository.GetByIdAsync(id);
+        _itemRepository = itemRepository;
+        _produtoRepository = produtoRepository;
     }
 
     public async Task<ItemNotaFiscal> CreateAsync(ItemNotaFiscal item)
     {
-        await ValidarAsync(item);
-        return await _repository.AddAsync(item);
-    }
-
-    public async Task<ItemNotaFiscal?> UpdateAsync(int id, ItemNotaFiscal item)
-    {
-        if (id != item.ItemId)
-            throw new ArgumentException("O ID informado não corresponde ao ID do item.");
-
-        await ValidarAsync(item);
-
-        return await _repository.UpdateAsync(item);
-    }
-
-    public async Task<bool> DeleteAsync(int id)
-    {
-        return await _repository.DeleteAsync(id);
-    }
-
-    private async Task ValidarAsync(ItemNotaFiscal item)
-    {
         if (item.QuantidadeProduto <= 0)
             throw new ArgumentException("A quantidade do produto deve ser maior que zero.");
 
-        var notaFiscalExiste = await _repository.NotaFiscalExistsAsync(item.NotaFiscalId);
-        if (!notaFiscalExiste)
-            throw new ArgumentException($"Não existe nota fiscal com o ID '{item.NotaFiscalId}'.");
+        var produto = await _produtoRepository.GetByIdAsync(item.ProdutoId);
 
-        var produto = await _repository.GetProdutoAsync(item.ProdutoId);
         if (produto is null)
             throw new ArgumentException($"Não existe produto com o ID '{item.ProdutoId}'.");
+
+        if (produto.Saldo < item.QuantidadeProduto)
+            throw new InvalidOperationException(
+                $"Saldo insuficiente para o produto '{produto.Descricao}'. Saldo atual: {produto.Saldo}, solicitado: {item.QuantidadeProduto}.");
+
+        produto.Saldo -= item.QuantidadeProduto;
+
+        await _produtoRepository.UpdateAsync(produto);
+
+        return await _itemRepository.AddAsync(item);
     }
 }

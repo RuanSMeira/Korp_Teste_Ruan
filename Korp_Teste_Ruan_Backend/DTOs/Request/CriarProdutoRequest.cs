@@ -4,6 +4,9 @@ namespace Korp_Teste_Ruan_Backend.DTOs.Request;
 
 public class CriarProdutoRequest
 {
+    [Required(ErrorMessage = "O ID da Empresa é obrigatório.")]
+    public int EmpresaId { get; set; }
+
     [Required(ErrorMessage = "Código do produto é obrigatório.")]
     [MaxLength(50)]
     public string Codigo { get; set; } = string.Empty;

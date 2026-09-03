@@ -1,94 +1,75 @@
 namespace Korp_Teste_Ruan_Backend.Controllers;
 
-using Microsoft.AspNetCore.Mvc;
-using Korp_Teste_Ruan_Backend.Models;
+using Korp_Teste_Ruan_Backend.DTOs.Request;
 using Korp_Teste_Ruan_Backend.Services;
+using Korp_Teste_Ruan_Backend.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ItensNotaFiscalController : ControllerBase
+public class NotaFiscalController : ControllerBase
 {
-    private readonly ItemNotaFiscalService _service;
+    private readonly NotaFiscalService _notaFiscalService;
 
-    public ItensNotaFiscalController(ItemNotaFiscalService service)
+    public NotaFiscalController(NotaFiscalService notaFiscalService)
     {
-        _service = service;
+        _notaFiscalService = notaFiscalService;
     }
 
-    // GET: api/itensnotafiscal
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<ItemNotaFiscal>>> GetAll()
-    {
-        var itens = await _service.GetAllAsync();
-        return Ok(itens);
-    }
-
-    // GET: api/itensnotafiscal/notafiscal/7
-    [HttpGet("notafiscal/{notaFiscalId:int}")]
-    public async Task<ActionResult<IEnumerable<ItemNotaFiscal>>> GetByNotaFiscal(int notaFiscalId)
-    {
-        var itens = await _service.GetByNotaFiscalIdAsync(notaFiscalId);
-        return Ok(itens);
-    }
-
-    // GET: api/itensnotafiscal/5
-    [HttpGet("{id:int}")]
-    public async Task<ActionResult<ItemNotaFiscal>> GetById(int id)
-    {
-        var item = await _service.GetByIdAsync(id);
-
-        if (item is null)
-            return NotFound();
-
-        return Ok(item);
-    }
-
-    // POST: api/itensnotafiscal
+    // POST: api/notafiscal
     [HttpPost]
-    public async Task<ActionResult<ItemNotaFiscal>> Create([FromBody] ItemNotaFiscal item)
+    public async Task<IActionResult> Create([FromBody] CriarNotaFiscalRequest request)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
         try
         {
-            var criado = await _service.CreateAsync(item);
-            return CreatedAtAction(nameof(GetById), new { id = criado.ItemId }, criado);
+            var nota = await _notaFiscalService.CreateComItensAsync(request);
+
+            // Retorna o DTO de resposta criado no seu Service
+            return Ok(nota);
         }
         catch (ArgumentException ex)
         {
-            return BadRequest(ex.Message);
+            return BadRequest(new { erro = ex.Message });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(new { erro = ex.Message });
         }
     }
 
-    // PUT: api/itensnotafiscal/5
-    [HttpPut("{id:int}")]
-    public async Task<IActionResult> Update(int id, [FromBody] ItemNotaFiscal item)
+    // GET: api/notafiscal/5
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> GetById(int id)
+    {
+        var notaFiscal = await _notaFiscalService.GetByIdAsync(id);
+
+        if (notaFiscal == null)
+            return NotFound(new { mensagem = $"Nota fiscal com ID {id} não encontrada." });
+
+        return Ok(notaFiscal);
+    }
+
+    // PUT: api/notafiscal/5/emitir
+    [HttpPut("{id:int}/emitir")]
+    public async Task<IActionResult> Emitir(int id)
     {
         try
         {
-            var atualizado = await _service.UpdateAsync(id, item);
-
-            if (atualizado is null)
-                return NotFound();
-
-            return Ok(atualizado);
+            var notaEmitida = await _notaFiscalService.EmitirNotaAsync(id);
+            return Ok(new { mensagem = "Nota fiscal emitida com sucesso!", nota = notaEmitida });
         }
         catch (ArgumentException ex)
         {
-            return BadRequest(ex.Message);
+            // Retorna 404 se a nota ou produto não existirem
+            return NotFound(new { erro = ex.Message });
         }
-    }
-
-    // DELETE: api/itensnotafiscal/5
-    [HttpDelete("{id:int}")]
-    public async Task<IActionResult> Delete(int id)
-    {
-        var sucesso = await _service.DeleteAsync(id);
-
-        if (!sucesso)
-            return NotFound();
-
-        return NoContent();
+        catch (InvalidOperationException ex)
+        {
+            // Retorna 400 se já estiver fechada ou se não houver saldo no estoque
+            return BadRequest(new { erro = ex.Message });
+        }
     }
 }

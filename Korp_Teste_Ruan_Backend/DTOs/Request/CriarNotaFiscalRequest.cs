@@ -4,6 +4,12 @@ namespace Korp_Teste_Ruan_Backend.DTOs.Request;
 
 public class CriarNotaFiscalRequest
 {
+    [Required]
+    public int EmpresaId { get; set; }
+
+    [Required]
+    public int UsuarioEmissorId { get; set; }
+
     [Required(ErrorMessage = "A nota fiscal deve ter ao menos um item.")]
     [MinLength(1, ErrorMessage = "A nota fiscal deve ter ao menos um item.")]
     public List<ItemNotaFiscalRequest> Itens { get; set; } = new();

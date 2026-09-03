@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace Korp_Teste_Ruan_Backend.Models;
 
 /// <summary>
@@ -12,6 +14,7 @@ public class Usuario
     public string SenhaHash { get; set; } = string.Empty;
 
     // Navegação
-    public Empresa Empresa { get; set; } = null!;
+    [JsonIgnore]
+    public Empresa? Empresa { get; set; } = null!;
     public ICollection<NotaFiscal> NotasEmitidas { get; set; } = new List<NotaFiscal>();
 }
