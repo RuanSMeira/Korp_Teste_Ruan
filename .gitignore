@@ -492,3 +492,10 @@ $RECYCLE.BIN/
 
 # Artefatos não mapeados do Backend
 Korp_Teste_Ruan_Backend/dotnet
+
+
+# Configurações locais sensíveis
+appsettings.Development.json
+
+# Configurações do Editor
+.vscode/
