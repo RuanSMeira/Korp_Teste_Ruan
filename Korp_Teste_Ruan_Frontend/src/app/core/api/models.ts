@@ -7,14 +7,6 @@ export interface Produto {
   rowVersion?: string;
 }
 
-export interface SaldoEstoque {
-  totalProdutos: number;
-  saldoTotal: number;
-  produtosBaixoEstoque: number;
-  produtosSemEstoque: number;
-  produtos: Produto[];
-}
-
 export interface CriarProdutoRequest {
   empresaId: number;
   codigo: string;

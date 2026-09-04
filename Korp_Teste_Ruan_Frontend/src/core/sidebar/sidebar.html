@@ -4,17 +4,8 @@
   <!-- Topo: logo + navegação -->
   <div class="w-full flex flex-col items-start gap-12">
     <!-- Logo -->
-    <div class="w-full flex items-center gap-2.5">
-      <div class="w-9 h-8 bg-[#E11A55] rounded-md flex items-center justify-center">
-        <span class="text-white text-xl font-extrabold">K</span>
-      </div>
-      <div class="flex flex-col items-start gap-0.5">
-        <div class="flex items-baseline gap-1">
-          <span class="text-white text-[22px] font-extrabold">KORP</span>
-          <span class="text-[#E11A55] text-sm font-semibold">ERP</span>
-        </div>
-        <span class="text-[#9CA3AF] text-[9px] font-semibold uppercase tracking-wide">by Viasoft</span>
-      </div>
+    <div class="w-full flex items-center">
+      <img src="/assets/Logo_Korp.webp" alt="Logo KORP ERP by Viasoft" class="h-12 max-w-full object-contain object-left" />
     </div>
 
     <!-- Navegação -->
@@ -79,9 +70,7 @@
     <div class="w-full h-px bg-[#2E3B5E]"></div>
 
     <div class="w-full flex items-center gap-3 p-2 bg-[#1A1F35] rounded-xl">
-      <div class="w-10 h-10 bg-[#E11A55] rounded-lg flex items-center justify-center shrink-0">
-        <span class="text-white text-lg font-extrabold">V</span>
-      </div>
+      <img src="/assets/Logo_Korp.webp" alt="Logo da empresa" class="w-10 h-10 rounded-lg object-cover object-left shrink-0" />
       <div class="flex-1 flex flex-col items-start gap-0.5 min-w-0">
         <p class="w-full text-white text-sm font-bold truncate">{{ sessao?.perfil === 'empresa' ? sessao.nomeFantasia : sessao?.nomeUsuario }}</p>
         <p class="w-full text-[#9CA3AF] text-[11px] truncate">{{ sessao?.perfil === 'empresa' ? 'Perfil empresa' : 'Perfil emissor' }}</p>

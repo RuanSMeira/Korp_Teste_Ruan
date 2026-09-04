@@ -1,5 +1,4 @@
 import { Component, inject } from '@angular/core';
-import { HeaderComponent } from '../../core/header/header';
 import { ProdutoService } from '../../app/core/api/produto.service';
 import { Produto } from '../../app/core/api/models';
 import { SessaoService } from '../../app/core/api/sessao.service';
@@ -19,7 +18,7 @@ interface SaldoRow {
 @Component({
   selector: 'app-conferir-saldo',
   standalone: true,
-  imports: [HeaderComponent],
+  imports: [],
   templateUrl: './conferir-saldo.html',
 })
 export class ConferirSaldoComponent {
@@ -55,10 +54,16 @@ export class ConferirSaldoComponent {
       this.carregando = false;
       return;
     }
-    this.produtoService.obterSaldo(empresaId).subscribe({
-      next: (saldo) => {
-        this.resumo = saldo;
-        this.rows = saldo.produtos.map((produto) => this.toRow(produto));
+    this.produtoService.listarPorEmpresa(empresaId).subscribe({
+      next: (produtos) => {
+        const saldoTotal = produtos.reduce((total, produto) => total + produto.saldo, 0);
+        this.resumo = {
+          totalProdutos: produtos.length,
+          saldoTotal,
+          produtosBaixoEstoque: produtos.filter((produto) => produto.saldo > 0 && produto.saldo < 10).length,
+          produtosSemEstoque: produtos.filter((produto) => produto.saldo <= 0).length,
+        };
+        this.rows = produtos.map((produto) => this.toRow(produto));
         this.carregando = false;
       },
       error: (error: Error) => {
