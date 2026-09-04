@@ -141,7 +141,6 @@ Para testar chamadas da API manualmente, o repositório também inclui uma colle
 
 - [README do backend](Korp_Teste_Ruan_Backend/README.md): rotas, payloads, migrations e detalhes técnicos da API.
 - [README do frontend](Korp_Teste_Ruan_Frontend/README.md): comandos específicos do Angular CLI.
-- [Collection do Postman](New%20Collection.postman_collection.json): requisições para exercício e validação da API.
 - [Diagrama do banco](Diagrama_DB_EMISSAONOTAFISCAL.png): visão visual das entidades persistidas.
 
 ## Pontos de atenção
